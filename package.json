@@ -1,5 +1,5 @@
 {
-  "name": "hyphenwebapp",
+  "name": "concertationwebapp",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:hyphenwebapp": "node dist/hyphenwebapp/server/server.mjs"
+    "serve:ssr:concertationwebapp": "node dist/concertationwebapp/server/server.mjs"
   },
   "private": true,
   "dependencies": {

@@ -6,4 +6,16 @@ export class Account {
       public userId: string
     ) {}
   }
+
+export class User
+{
+    constructor(
+      public id: string,
+      public email: string,
+      public civilStatus:string,
+      public firstName: string,
+      public lastName: string
+  ){}
+}
+
   

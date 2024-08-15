@@ -1,18 +1,30 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Account } from '../models/account.model';
+import { Account, User } from '../models/account.model';
+import { BrowserStorageService } from './browser-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  private apiUrl = 'https://localhost:5001/api/v1/accounts';
+  private apiUrl = 'https://localhost:5001/api/v1/users/me';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private storageService: BrowserStorageService) {}
 
-  getAccounts(): Observable<Account[]> {
-    return this.http.get<Account[]>(this.apiUrl);
+  getAccounts(): Observable<User> {
+    let header = new HttpHeaders().set(
+      "Authorization",
+      `Bearer ${this.storageService.getItem("token")}`
+    );
+
+    // let token = this.storageService.getItem("token");
+    // let header = new Headers({ 'Authorization': `Bearer ${token}` });
+    // let options = {
+    //    headers: header,
+    // };
+
+    return this.http.get<User>(this.apiUrl, {headers:header});
   }
 
   // Other CRUD methods...

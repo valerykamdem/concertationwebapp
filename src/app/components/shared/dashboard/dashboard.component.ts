@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AccountService } from '../../../services/account.service';
+import { User } from '../../../models/account.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,6 +13,8 @@ export class DashboardComponent {
 
   accounts: any[] = [];
 
+  user: User | undefined;
+
   constructor(private accountService: AccountService) { }
 
   ngOnInit() {
@@ -19,9 +22,12 @@ export class DashboardComponent {
   }
 
   loadAccounts() {
-    /* this.accountService.getAccounts().subscribe((accounts: any[]) => {
-      this.accounts = accounts;
-    }); */
+     this.accountService.getAccounts().subscribe((user: any) => {
+      debugger
+      if(user.isSuccess){
+        this.user = user.value;
+      }     
+    }); 
     // this.accountService.getAccount(userId).subscribe(
     //   account => this.account = account,
     //   error => console.error('Erreur lors de la récupération du compte', error)
