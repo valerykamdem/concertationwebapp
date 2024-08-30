@@ -1,40 +1,63 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { BrowserStorageService } from '../../../services/browser-storage.service';
+import { Router, RouterLink } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextModule } from 'primeng/inputtext';
+import { AuthResponse } from '../../../interfaces/api-response';
+import { LoginRequest } from '../../../interfaces/login-request';
+import { ButtonModule } from 'primeng/button';
+import { Subscription } from 'rxjs';
+import { PasswordModule } from 'primeng/password';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   host: {ngSkipHydration: 'true'},
-  imports: [FormsModule],
+  imports: [ReactiveFormsModule, RouterLink, 
+    InputTextModule, CheckboxModule, 
+    ButtonModule, PasswordModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
 
-  isLoginView: boolean = false;
-  email: string = '';
-  password: string = '';
-  name: string = '';
+  private formBuilder = inject(FormBuilder);
+  private loginSubscription: Subscription | null = null;
+  valCheck: string[] = ['remember'];
 
-  constructor(private authService: AuthService, private router: Router,
-    private storageService: BrowserStorageService) { }
+  constructor(private authService: AuthService, private router: Router) { 
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/']);
+    }
+  }
+
+      loginFormGroup = this.formBuilder.group({
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', Validators.required]
+      });
+
 
   login() {
-    //debugger;
-    this.authService.login({ email: this.email, password: this.password }).subscribe(
-      (response: any) => {
-        //debugger;
-        if(response.isSuccess){
-          this.storageService.setItem('token', response.value.accessToken);
-          this.router.navigate(['/dashboard']);
-        }       
+    if (this.loginFormGroup.valid) {
+      let loginRequest: LoginRequest = {
+        email: this.loginFormGroup.value.email as string,
+        password: this.loginFormGroup.value.password as string
+      }
+
+    this.loginSubscription = this.authService.login(loginRequest).subscribe({
+      next: (result: AuthResponse | null | undefined) => {
+        this.router.navigate(['/']); 
       },
-      (error) => {
+      error: error => {
         console.error('Login failed', error);
       }
-    );
+    });
   }
+}
+
+ngOnDestroy(): void {
+  this.loginSubscription?.unsubscribe();
+}
+
 }

@@ -7,4 +7,11 @@ export class User {
         public email: string
     ) {}
   }
-  
+
+//   export interface User {
+//   id: string;
+//   email: string;
+//   civilStatus: string;
+//   firstName: string;
+//   lastName: string;
+// }

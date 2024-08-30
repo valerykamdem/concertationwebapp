@@ -1,31 +1,41 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AccountService } from '../../../services/account.service';
-import { User } from '../../../models/account.model';
+import { User } from '../../../models/user.model';
+import { ApiResponse } from '../../../interfaces/api-response';
+import { CardModule } from 'primeng/card';
+import { AvatarModule } from 'primeng/avatar';
+import { NgFor } from '@angular/common';
+import { StyleClassModule } from 'primeng/styleclass';
+
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [],
+  imports: [
+    CommonModule,
+    CardModule, 
+    AvatarModule, 
+    NgFor,
+    StyleClassModule],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
 
-  accounts: any[] = [];
-
-  user: User | undefined;
+  user = signal<User | null | undefined>(undefined);
 
   constructor(private accountService: AccountService) { }
 
   ngOnInit() {
-    this.loadAccounts();
+    // this.loadAccounts();
   }
 
   loadAccounts() {
-     this.accountService.getAccounts().subscribe((user: any) => {
-      debugger
-      if(user.isSuccess){
-        this.user = user.value;
+     this.accountService.getAccounts().subscribe((response: any) => {
+      if(response.isSuccess){
+        //debugger
+        this.user = response.value;
       }     
     }); 
     // this.accountService.getAccount(userId).subscribe(

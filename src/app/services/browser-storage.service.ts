@@ -19,4 +19,11 @@ export class BrowserStorageService {
       localStorage.removeItem(key);
     }
   }
+
+  clear(): void {
+    if (typeof window !== 'undefined') {
+      localStorage.clear();
+    }
+  }
+
 }

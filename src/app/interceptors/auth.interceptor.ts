@@ -1,19 +1,88 @@
-import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { catchError, switchMap, filter, take } from 'rxjs/operators';
+import { BrowserStorageService } from '../services/browser-storage.service';
+import { AuthService } from '../services/auth.service';
+import { AuthResponse } from '../interfaces/api-response';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('token');
-    if (token) {
-      const cloned = req.clone({
-        headers: req.headers.set('Authorization', `Bearer ${token}`)
-      });
-      return next.handle(cloned);
+  private storageService = inject(BrowserStorageService);
+  private authService = inject(AuthService);
+  private isRefreshing = false;
+  private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // debugger
+    if (this.authService.currentTokenValue) {
+      request = this.AddTokenHeader(request, this.authService.currentTokenValue);
+    }
+    // debugger
+    return next.handle(request).pipe(
+      catchError(error => {
+        // debugger
+        if (error instanceof HttpErrorResponse && error.status === 401) {
+          // debugger
+          return this.handle401Error(request, next);
+        } else {
+          return throwError(error);
+        }
+      })
+    );
+  }
+
+  private AddTokenHeader(request: HttpRequest<any>, token: string) {
+    // debugger
+    return request.clone({
+      setHeaders: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+  }
+
+private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
+  // debugger
+    if (!this.isRefreshing) {
+      this.isRefreshing = true;
+      this.refreshTokenSubject.next(null);
+
+      return this.authService.refreshToken().pipe(
+        switchMap((token: AuthResponse) => {
+          // debugger
+          this.isRefreshing = false;
+          this.refreshTokenSubject.next(token.value.refreshToken);
+          return next.handle(this.AddTokenHeader(request, token.value.accessToken));
+        }),
+        catchError((err) => {
+          this.isRefreshing = false;
+          // this.authService.logout();
+          return throwError(err);
+        })
+      );
     } else {
-      return next.handle(req);
+      return this.refreshTokenSubject.pipe(
+        filter(token => token != null),
+        take(1),
+        switchMap((accessToken :any) => {
+          return next.handle(this.AddTokenHeader(request, accessToken));
+        })
+      );
     }
   }
 }
+
+// export const authInterceptor: HttpInterceptorFn = (req, next) => {
+
+//   const token = localStorage.getItem('token');
+
+//   if (token) {
+//     const cloned = req.clone({
+//       headers: req.headers.set('Authorization', `Bearer ${token}`)
+//     });
+//     return next(cloned);
+//   } else {
+//     return next(req);
+//   }
+// };
