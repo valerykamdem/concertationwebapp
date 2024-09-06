@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { PrimeNGConfig } from 'primeng/api';
+import { UserService } from './services/user.service';
 
 
 @Component({
@@ -13,9 +14,13 @@ import { PrimeNGConfig } from 'primeng/api';
 export class AppComponent implements OnInit {
   title = 'concertationwebapp';
 
-  constructor(private primengConfig: PrimeNGConfig) {}
+  constructor(private primengConfig: PrimeNGConfig, private userService: UserService) {}
 
   ngOnInit() {
     this.primengConfig.ripple = true;
+
+    this.userService.initializeUser()/* .catch(error => {
+      console.error("Erreur lors de l'initialisation de l'ID utilisateur", error);
+    } )*/;
   }
 }

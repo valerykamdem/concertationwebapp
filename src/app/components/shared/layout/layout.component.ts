@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, OnDestroy, Renderer2, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router'
 import { AuthService } from '../../../services/auth.service';
+import { UserService } from '../../../services/user.service';
 import { FooterComponent } from '../footer/footer.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { TopbarComponent } from '../topbar/topbar.component';
@@ -18,7 +19,7 @@ import { CommonModule } from '@angular/common';
     FooterComponent, 
     SidebarComponent, 
     TopbarComponent, 
-    ConfigComponent, 
+    ConfigComponent,
     CommonModule],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
@@ -39,7 +40,11 @@ export class LayoutComponent implements OnDestroy {
 
   @ViewChild(TopbarComponent) appTopbar!: TopbarComponent;
 
-  constructor(private authService: AuthService, public layoutService: LayoutService, public renderer: Renderer2, public router: Router) {    
+  constructor(private authService: AuthService, 
+    public layoutService: LayoutService, 
+    public renderer: Renderer2, 
+    public router: Router,
+    private userService: UserService) {    
     this.checkAuthentication();
       this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
           if (!this.menuOutsideClickListener) {
@@ -74,6 +79,10 @@ export class LayoutComponent implements OnDestroy {
               this.hideMenu();
               this.hideProfileMenu();
           });
+
+        //   this.userService.initializeUser()/* .catch(error => {
+        //     console.error("Erreur lors de l'initialisation de l'ID utilisateur", error);
+        //   } )*/;
   }
 
   hideMenu() {

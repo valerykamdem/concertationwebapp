@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, WritableSignal } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, switchMap, filter, take } from 'rxjs/operators';
@@ -15,16 +15,14 @@ export class AuthInterceptor implements HttpInterceptor {
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // debugger
-    if (this.authService.currentTokenValue) {
-      request = this.AddTokenHeader(request, this.authService.currentTokenValue);
+
+    if (this.authService.currentTokenValue()) {
+      request = this.AddTokenHeader(request, this.authService.currentTokenValue()()!);
     }
-    // debugger
+
     return next.handle(request).pipe(
       catchError(error => {
-        // debugger
         if (error instanceof HttpErrorResponse && error.status === 401) {
-          // debugger
           return this.handle401Error(request, next);
         } else {
           return throwError(error);
@@ -34,7 +32,6 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private AddTokenHeader(request: HttpRequest<any>, token: string) {
-    // debugger
     return request.clone({
       setHeaders: {
         'Authorization': `Bearer ${token}`
@@ -43,17 +40,15 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
 private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
-  // debugger
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
 
       return this.authService.refreshToken().pipe(
         switchMap((token: AuthResponse) => {
-          // debugger
           this.isRefreshing = false;
           this.refreshTokenSubject.next(token.value.refreshToken);
-          return next.handle(this.AddTokenHeader(request, token.value.accessToken));
+          return next.handle(this.AddTokenHeader(request, token!.value.accessToken));
         }),
         catchError((err) => {
           this.isRefreshing = false;
@@ -72,17 +67,3 @@ private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
     }
   }
 }
-
-// export const authInterceptor: HttpInterceptorFn = (req, next) => {
-
-//   const token = localStorage.getItem('token');
-
-//   if (token) {
-//     const cloned = req.clone({
-//       headers: req.headers.set('Authorization', `Bearer ${token}`)
-//     });
-//     return next(cloned);
-//   } else {
-//     return next(req);
-//   }
-// };

@@ -1,15 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { User } from '../models/user.model';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../interfaces/api-response';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   private apiUrl = environment.apiUrl;
+  private user = signal<User | null | undefined>(undefined);
 
   constructor(private http: HttpClient) {}
 
@@ -17,10 +19,24 @@ export class UserService {
     return this.http.get<User[]>(`${this.apiUrl}/users/me`);
   }
 
-  getMe(): Observable<ApiResponse<User> | null | undefined> {
-    return this.http.get<ApiResponse<User>>(`${this.apiUrl}/users/me`)
-    .pipe(tap( _ => console.log("fetched Me")), 
-    catchError(this.handleError<ApiResponse<User>>('getMe')));
+  initializeUser(): Promise<User | null | undefined> {
+    console.log("initializerUser");
+    console.log();
+    return this.http.get<ApiResponse<User>>(`${this.apiUrl}/users/me`).toPromise()
+      .then(response => {
+        console.log("initializerUserResp");
+        console.log(response?.value);
+        this.user.set(response?.value);
+        return response?.value;
+      });
+  }
+
+  getUser() {
+    return this.user;
+  }
+
+  setUserNull(): void {
+    this.user.set(null);
   }
 
   /**

@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Operation } from '../models/operation.model';
+import { Account } from '../models/account.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -9,6 +10,9 @@ import { environment } from '../../environments/environment';
 })
 export class OperationService {
   private apiUrl = environment.apiUrl;
+  private accountSource = new BehaviorSubject<Account | null>(null);
+  private currentAccount = signal<Account | null>(null);
+  // currentAccount = this.accountSource.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -16,16 +20,13 @@ export class OperationService {
     return this.http.get<Operation[]>(`${this.apiUrl}`);
   }
 
-  deposit(accountNumber: string, amount: number): Observable<Operation> {
-    return this.http.post<Operation>(`${this.apiUrl}/operations/deposit`, { accountNumber, amount });
+  changeAccount(account: Account) {
+    // this.accountSource.next(account);
+    this.currentAccount.set(account);
   }
 
-  withdraw(accountNumber: number, amount: number): Observable<Operation> {
-    return this.http.post<Operation>(`${this.apiUrl}/operations/withdraw`, { accountNumber, amount });
+  currentAccountValue() {
+    return this.currentAccount;
   }
 
-  transfer(fromAccountNumber: string, toAccountNumber: string, amount: number, itendedUse: string): Observable<Operation> {
-    return this.http.post<Operation>(`${this.apiUrl}/operations/transfer`, 
-      { fromAccountNumber, toAccountNumber, amount,  itendedUse});
-  }
 }

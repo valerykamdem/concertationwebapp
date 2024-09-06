@@ -1,13 +1,15 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccountService } from '../../../services/account.service';
+import { AuthService } from '../../../services/auth.service';
+import { UserService } from '../../../services/user.service';
+import { OperationService } from '../../../services/operation.service';
 import { User } from '../../../models/user.model';
-import { ApiResponse } from '../../../interfaces/api-response';
+import { Account } from '../../../models/account.model';
 import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
-import { NgFor } from '@angular/common';
-import { StyleClassModule } from 'primeng/styleclass';
-
+import { Router, RouterLink } from '@angular/router';
+import { ApiResponse, ApiResponses } from '../../../interfaces/api-response';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,33 +17,55 @@ import { StyleClassModule } from 'primeng/styleclass';
   imports: [
     CommonModule,
     CardModule, 
-    AvatarModule, 
-    NgFor,
-    StyleClassModule],
+    AvatarModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
 
-  user = signal<User | null | undefined>(undefined);
+  userService = inject(UserService);
+  user = this.userService.getUser(); //signal<User | null | undefined>(undefined);
+  accounts = signal<Account[] | null | undefined>(undefined);
+  account = signal<Account | null | undefined>(undefined);
 
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService,
+    private operationService: OperationService,
+    private router: Router) { }
 
   ngOnInit() {
-    // this.loadAccounts();
+  //  this.user = this.userService.getUser();
+  console.log(this.user());
+    this.getAccount();   
   }
 
-  loadAccounts() {
-     this.accountService.getAccounts().subscribe((response: any) => {
+  loadAccounts(): void {
+     this.accountService.getAccounts().subscribe((response: ApiResponses<Account>) => {
       if(response.isSuccess){
-        //debugger
-        this.user = response.value;
+        this.accounts.set(response.value);
+        console.log(this.accounts());
       }     
     }); 
-    // this.accountService.getAccount(userId).subscribe(
-    //   account => this.account = account,
-    //   error => console.error('Erreur lors de la récupération du compte', error)
-    // );
+  }
+
+  getAccount(): void {
+    console.log(this.user());
+    this.accountService.getAccount(this.user()?.id!)
+      .subscribe((response: ApiResponses<Account>) => {
+        if(response.isSuccess){
+          this.accounts.set(response.value);
+          // console.log(this.accounts());
+        }
+      });
+  }
+
+  goToOperation(account: Account) {
+    this.operationService.changeAccount(account);
+    this.router.navigate(['/operation']);
+  }
+
+  onSelectAccount(account: Account) {
+    this.accountService.setSelectedAccount(account);
+    this.router.navigate(['/accounts', account.userId, 'operations']);
   }
 
 }

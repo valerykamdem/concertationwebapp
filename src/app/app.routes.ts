@@ -1,11 +1,13 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { LayoutComponent } from './components/shared/layout/layout.component';
+import { AccountResolver } from './utils/account.resolver';
+
 
 export const routes: Routes = [
     // {
     //     path: '',
-    //     redirectTo:'dashboard',
+    //     redirectTo:'login',
     //     pathMatch:'full'
     // },
     {
@@ -38,6 +40,19 @@ export const routes: Routes = [
                 path:'transfert',
                 loadComponent: () => import('./components/member/transfert/transfert.component')
                 .then(module => module.TransfertComponent),
+                canActivate:[AuthGuard]
+            },
+            {
+                path:'operation',
+                loadComponent: () => import('./components/member/operation/operation.component')
+                .then(module => module.OperationComponent),
+                canActivate:[AuthGuard]
+            },
+            { 
+                path: 'accounts/:userId/operations', 
+                loadComponent: () => import('./components/member/operation/operation.component')
+                .then(module => module.OperationComponent), 
+                resolve: { account: AccountResolver },
                 canActivate:[AuthGuard]
             }
         ]

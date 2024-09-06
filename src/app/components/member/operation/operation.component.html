@@ -1,0 +1,24 @@
+<div *ngIf="account">
+    <h2>Compte {{ account()?.accountNumber }}</h2>
+    <p>Balance: {{ account()?.balance }} €</p>
+    <h3>Opérations</h3>
+    <ul>
+      <li *ngFor="let operation of account()?.operations">
+        {{ operation.description }} - {{ operation.amount }} €
+      </li>
+    </ul>
+  </div>
+
+  <p-button type="button" (onClick)="goBack()">go back</p-button>
+  
+
+  <div *ngIf="account1">
+    <h2>Compte {{ account1.accountNumber }}</h2>
+    <p>Balance: {{ account1.balance }} €</p>
+    <h3>Opérations</h3>
+    <ul>
+      <li *ngFor="let operation of account1.operations">
+        {{ operation.description }} - {{ operation.amount }} €
+      </li>
+    </ul>
+  </div>

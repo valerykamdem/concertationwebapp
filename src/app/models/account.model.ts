@@ -1,9 +1,11 @@
-export class Account {
-  constructor(
-    public id: string,
-    public accountType: number,
-    public balance: number,
-    public userId: string
-  ) {}
+import { Operation } from "./operation.model";
+
+export interface Account {
+    id: string,
+    accountType: number,
+    balance: number,
+    userId: string,
+    accountNumber: string,
+    operations: Operation[]
 }
 

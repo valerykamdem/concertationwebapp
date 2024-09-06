@@ -14,9 +14,13 @@ import { PasswordModule } from 'primeng/password';
   selector: 'app-login',
   standalone: true,
   host: {ngSkipHydration: 'true'},
-  imports: [ReactiveFormsModule, RouterLink, 
-    InputTextModule, CheckboxModule, 
-    ButtonModule, PasswordModule],
+  imports: [
+    ReactiveFormsModule, 
+    RouterLink, 
+    InputTextModule, 
+    CheckboxModule, 
+    ButtonModule, 
+    PasswordModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

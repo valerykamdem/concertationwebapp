@@ -1,4 +1,4 @@
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterModule } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
@@ -8,7 +8,7 @@ import { LayoutService } from '../../../services/layout.service';
 @Component({
   selector: 'app-menuitem',
   standalone: true,
-  imports: [CommonModule, NgIf, RouterLink, RouterModule],
+  imports: [CommonModule, RouterLink, RouterModule],
   templateUrl: './menuitem.component.html',
   styleUrl: './menuitem.component.css'
 })
