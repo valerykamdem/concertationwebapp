@@ -10,10 +10,10 @@
                 </div>
                 
             </div>
-            <span class="text-500">since last visit</span>
+            <span class="text-green-500 font-medium text-xl">Total Balance {{ balanceTotal }} FCFA</span>
         </div>
     </div>
-    <div class="col-12 lg:col-6 xl:col-3" *ngFor="let account of accounts()" (click)="goToOperation(account)">
+    <div class="col-12 lg:col-12 xl:col-6" *ngFor="let account of accounts()" (click)="goToOperation(account)">
         <div class="card mb-0">
             <div class="flex justify-content-between mb-3">
                 <div>
@@ -29,22 +29,39 @@
             <span class="text-green-500 font-medium">Numéro de compte {{account.accountNumber}}</span>
         </div>
     </div>
-    <div class="col-12 lg:col-6 xl:col-3" *ngFor="let account of accounts()" (click)="onSelectAccount(account)">
-        <div class="card mb-0">
-            <div class="flex justify-content-between mb-3">
-                <div>
-                    <span class="block text-500 font-medium mb-3" *ngIf="account.accountType === 1">Compte Courant</span>
-                    <span class="block text-500 font-medium mb-3" *ngIf="account.accountType === 2">Compte Épargne</span>
-                    <div class="text-900 font-medium text-xl">{{account.balance}} FCFA</div>
-                </div>
-                <div class="flex align-items-center justify-content-center bg-blue-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
-                    <i class="pi pi-money-bill text-blue-500 text-xl" *ngIf="account.accountType === 1"></i>
-                    <i class="pi pi-building-columns text-green-500 text-xl" *ngIf="account.accountType === 2"></i>
-                </div>
-            </div>
-            <span class="text-green-500 font-medium">Numéro de compte {{account.accountNumber}}</span>
+
+    <div class="col-12 xl:col-6" *ngFor="let account of accounts()">
+        <div class="card">
+            <h5>Compte {{account.accountNumber}} / <span class="text-green-500 font-medium"> {{ account.balance }} FCFA</span></h5>
+            <p-table [value]="account.operations" styleClass="p-datatable-striped" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="operationDate">Date <p-sortIcon field="operationDate"></p-sortIcon></th>
+                        <th>Motif</th>
+                        <th>Mouvements</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-operation>
+                    <tr>
+                        <td>{{ operation.operationDate | date:'dd-MM-yyyy'}} </td>
+                        <td>{{ operation.itendedUse }} </td>
+                        <td>
+                            <span class="text-green-500"  *ngIf="operation.operationType === 1">
+                                + {{ operation.amount }} FCFA
+                            </span>
+                            <span class="text-red-500"  *ngIf="(operation.operationType === 2 || operation.operationType === 3)">
+                                - {{ operation.amount }} FCFA
+                            </span>
+                            <span class="text-blue-500"  *ngIf="operation.operationType === 5">
+                                 + 0 FCFA
+                            </span>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>  
         </div>
     </div>
+
     <!-- <div class="col-12 lg:col-6 xl:col-3">
         <div class="card mb-0">
             <div class="flex justify-content-between mb-3">
@@ -92,33 +109,8 @@
     </div> -->
 </div>
 
-    <!-- <div class="col-12 xl:col-6">
-        <div class="card">
-            <h5>Recent Sales</h5>
-            <p-table [value]="products" [paginator]="true" [rows]="5" responsiveLayout="scroll">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>Image</th>
-                        <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
-                        <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
-                        <th>View</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-product>
-                    <tr>
-                        <td style="width: 15%; min-width: 5rem;">
-                            <img src="assets/demo/images/product/{{product.image}}" class="shadow-4" alt="{{product.name}}" width="50">
-                        </td>
-                        <td style="width: 35%; min-width: 7rem;">{{product.name}}</td>
-                        <td style="width: 35%; min-width: 8rem;">{{product.price | currency:'USD'}}</td>
-                        <td style="width: 15%;">
-                            <button pButton pRipple type="button" icon="pi pi-search" class="p-button p-component p-button-text p-button-icon-only"></button>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div>
-        <div class="card">
+ 
+        <!--<div class="card">
             <div class="flex justify-content-between align-items-center mb-5">
                 <h5>Best Selling Products</h5>
                 <div>

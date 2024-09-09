@@ -5,51 +5,57 @@ import { AccountService } from '../../../services/account.service';
 import { Account } from '../../../models/account.model';
 import { Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Operation } from '../../../models/operation.model';
+import { ApiResponse, ApiResponses } from '../../../interfaces/api-response';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-operation',
   standalone: true,
   imports: [
     CommonModule, 
-    ButtonModule
-  ],
+    ButtonModule,
+    TableModule],
   templateUrl: './operation.component.html',
   styleUrl: './operation.component.css'
 })
 export class OperationComponent implements OnInit {
-  account = signal<Account | null | undefined>(undefined);
-  account1: Account | null = null;
+
+  operations1 = signal<Operation[] | null | undefined>(undefined);
+  operations!: Operation[];
+  balanceTotal = 0;
+  lastOperation = signal<Operation | null | undefined>(undefined);
 
   constructor(
     private accountService: AccountService,
     private operationService: OperationService,
     private location: Location,
-    private route: ActivatedRoute) {}
+    private route: ActivatedRoute,
+    private router: Router) {}
 
   ngOnInit() {
-    // this.operationService.currentAccount.subscribe(account => this.account.set(account));
+    this.getOperationsByAccount();
+  }
 
-    // this.account1 = this.accountService.getSelectedAccount();
-
-    // if (!this.account1) {
-    //   // Si l'utilisateur a rafraîchi la page et que les données sont perdues,
-    //   // redirigez-le ou gérez la situation comme vous le souhaitez
-    //   console.error("Aucun compte sélectionné.");
-    // }
-
-    this.route.data.subscribe(data => {
-      console.log(data['account']);
-      this.account1 = data['account'];
-    });
-
-    console.log(this.operationService.currentAccountValue()());
-    this.account = this.operationService.currentAccountValue();//.subscribe(account => this.account.set(account));
-
+  getOperationsByAccount(): void {
+    const accountId = this.route.snapshot.paramMap.get('accountId')!;
+    this.operationService.getOperationByAccountId(accountId)
+      .subscribe((response: ApiResponses<Operation>) => {
+        if(response.isSuccess){
+          this.operations = response.value;
+          this.lastOperation.set(this.operations[0]);
+          console.log("last element", this.lastOperation())
+        }
+      });
   }
 
   goBack(): void {
     this.location.back();
+  }
+
+  goToTransfert(): void {
+    this.router.navigate(['/transfert']);
   }
 
 }

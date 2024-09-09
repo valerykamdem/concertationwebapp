@@ -1,24 +1,67 @@
-<div *ngIf="account">
-    <h2>Compte {{ account()?.accountNumber }}</h2>
-    <p>Balance: {{ account()?.balance }} €</p>
-    <h3>Opérations</h3>
-    <ul>
-      <li *ngFor="let operation of account()?.operations">
-        {{ operation.description }} - {{ operation.amount }} €
-      </li>
-    </ul>
+<h3>Compte {{ lastOperation()?.accountNumber }}</h3>
+
+<!-- <div *ngIf="operations">
+  <div *ngFor="let operation of operations()">
+    <p>description: {{ operation.description }} </p>
+    <p>accountNumber: {{ operation.accountNumber }} </p>
+    <p>operationDate: {{ operation.operationDate }} </p>
+    <p>operationType: {{ operation.operationType }} </p>
+    <p>amount: {{ operation.amount }} €</p>
+    <p>BalanceAfterBooking: {{ operation.balanceAfterBooking }} €</p>
+    <p>Reference NumberBalance: {{ operation.referenceNumber }} </p>
+    <p>motif1: {{ operation.itendedUse }} </p>
+  </div>
+</div> 
+
+  <p-button type="button" (onClick)="goBack()">go back</p-button>-->
+
+  <div class="grid" *ngIf="operations">
+    <div class="col-12 lg:col-12 xl:col-12">
+        <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <p-button (onClick)="goToTransfert()">Transfert</p-button>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-blue-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                    <i class="pi pi-user text-blue-500 text-xl"></i> 
+                </div>
+                
+            </div>
+            <span class="text-green-500 font-medium text-xl">Total {{ lastOperation()?.balanceAfterBooking }} FCFA</span>
+        </div>
+    </div>
+    <div class="col-12 xl:col-12">
+      <div class="card">
+          <!-- <h5>Compte {{operation.accountNumber}} / <span class="text-green-500 font-medium"> {{ balanceTotal }} FCFA</span></h5> -->
+          <p-table [value]="operations" styleClass="p-datatable-striped" [paginator]="true" [rows]="10" responsiveLayout="scroll">
+              <ng-template pTemplate="header">
+                  <tr>
+                      <th pSortableColumn="operationDate">Date <p-sortIcon field="operationDate"></p-sortIcon></th>
+                      <th>Motif</th>
+                      <th>Mouvements</th>
+                      <th>Etat</th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-operation>
+                  <tr>
+                      <td>{{ operation.operationDate | date:'dd-MM-yyyy'}} </td>
+                      <td>{{ operation.itendedUse }} </td>
+                      <td>
+                          <span class="text-green-500"  *ngIf="operation.operationType === 1">
+                              + {{ operation.amount }} FCFA
+                          </span>
+                          <span class="text-red-500"  *ngIf="(operation.operationType === 2 || operation.operationType === 3)">
+                              - {{ operation.amount }} FCFA
+                          </span>
+                          <span class="text-blue-500"  *ngIf="operation.operationType === 5">
+                               + 0 FCFA
+                          </span>
+                      </td>
+                      <td>{{ operation.balanceAfterBooking }} </td>
+                  </tr>
+              </ng-template>
+          </p-table>  
+      </div>
+  </div>
   </div>
 
-  <p-button type="button" (onClick)="goBack()">go back</p-button>
-  
-
-  <div *ngIf="account1">
-    <h2>Compte {{ account1.accountNumber }}</h2>
-    <p>Balance: {{ account1.balance }} €</p>
-    <h3>Opérations</h3>
-    <ul>
-      <li *ngFor="let operation of account1.operations">
-        {{ operation.description }} - {{ operation.amount }} €
-      </li>
-    </ul>
-  </div>

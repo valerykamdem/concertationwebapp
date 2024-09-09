@@ -37,7 +37,9 @@ export class AuthService {
     .pipe(tap((result: AuthResponse) => {
       if(result.isSuccess){
         this.storageService.setItem('authToken', result.value.accessToken);
-        this.storageService.setItem('refreshToken', result.value.refreshToken);          
+        this.storageService.setItem('refreshToken', result.value.refreshToken);
+        this.currentToken.set(result.value.accessToken || '');
+        this.currentRefreshToken.set(result.value.refreshToken || '');        
       }
     }),
     map((result: AuthResponse) => {    

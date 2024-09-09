@@ -16,11 +16,6 @@ export class AccountService {
 
   constructor(private http: HttpClient, private storageService: BrowserStorageService) {}
 
-  // // Other CRUD methods...
-  // getAccounts() {
-  //   return this.http.get(`${this.apiUrl}/accounts`);
-  // }
-
    // Other CRUD methods...
    getAccounts() : Observable<ApiResponses<Account>> {
     return this.http.get<ApiResponses<Account>>(`${this.apiUrl}/accounts`).pipe(

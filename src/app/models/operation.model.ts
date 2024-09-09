@@ -1,5 +1,6 @@
 export class Operation {
     constructor(
+        public id:string,
         public referenceNumber: string,
         public operationType: number,
         public amount: number,

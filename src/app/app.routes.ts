@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { LayoutComponent } from './components/shared/layout/layout.component';
 import { AccountResolver } from './utils/account.resolver';
+import { UserResolver } from './utils/user.resolver';
 
 
 export const routes: Routes = [
@@ -22,6 +23,7 @@ export const routes: Routes = [
                 path:'',
                 loadComponent: () => import('./components/shared/dashboard/dashboard.component')
                 .then(module => module.DashboardComponent),
+                resolve: { user: UserResolver },
                 canActivate:[AuthGuard]
             },
             {
@@ -43,16 +45,16 @@ export const routes: Routes = [
                 canActivate:[AuthGuard]
             },
             {
-                path:'operation',
+                path:'operations',
                 loadComponent: () => import('./components/member/operation/operation.component')
                 .then(module => module.OperationComponent),
                 canActivate:[AuthGuard]
             },
             { 
-                path: 'accounts/:userId/operations', 
+                path: 'operations/:accountId', 
                 loadComponent: () => import('./components/member/operation/operation.component')
                 .then(module => module.OperationComponent), 
-                resolve: { account: AccountResolver },
+                // resolve: { account: AccountResolver },
                 canActivate:[AuthGuard]
             }
         ]

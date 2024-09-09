@@ -1,15 +1,15 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccountService } from '../../../services/account.service';
-import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
 import { OperationService } from '../../../services/operation.service';
-import { User } from '../../../models/user.model';
 import { Account } from '../../../models/account.model';
 import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterOutlet, ActivatedRoute } from '@angular/router';
 import { ApiResponse, ApiResponses } from '../../../interfaces/api-response';
+import { PaginatorModule } from 'primeng/paginator';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +17,11 @@ import { ApiResponse, ApiResponses } from '../../../interfaces/api-response';
   imports: [
     CommonModule,
     CardModule, 
-    AvatarModule],
+    AvatarModule,
+    RouterLink,
+    RouterOutlet,
+    PaginatorModule,
+    TableModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -26,16 +30,15 @@ export class DashboardComponent {
   userService = inject(UserService);
   user = this.userService.getUser(); //signal<User | null | undefined>(undefined);
   accounts = signal<Account[] | null | undefined>(undefined);
-  account = signal<Account | null | undefined>(undefined);
+  balanceTotal = 0;
 
   constructor(private accountService: AccountService,
     private operationService: OperationService,
+    private route: ActivatedRoute,
     private router: Router) { }
 
   ngOnInit() {
-  //  this.user = this.userService.getUser();
-  console.log(this.user());
-    this.getAccount();   
+    this.getAccount(); 
   }
 
   loadAccounts(): void {
@@ -48,24 +51,36 @@ export class DashboardComponent {
   }
 
   getAccount(): void {
-    console.log(this.user());
     this.accountService.getAccount(this.user()?.id!)
       .subscribe((response: ApiResponses<Account>) => {
         if(response.isSuccess){
           this.accounts.set(response.value);
-          // console.log(this.accounts());
+          this.balanceTotal = response.value.reduce((accumulateur, account) => accumulateur + account.balance, 0);
         }
       });
   }
 
   goToOperation(account: Account) {
-    this.operationService.changeAccount(account);
-    this.router.navigate(['/operation']);
+    this.router.navigate(['/operations/', account.id]);
   }
 
-  onSelectAccount(account: Account) {
-    this.accountService.setSelectedAccount(account);
-    this.router.navigate(['/accounts', account.userId, 'operations']);
-  }
+  // getSeverity(status: string) {
+  //   switch (status) {
+  //       case 'unqualified':
+  //           return 'danger';
+
+  //       case 'qualified':
+  //           return 'success';
+
+  //       case 'new':
+  //           return 'info';
+
+  //       case 'negotiation':
+  //           return 'warning';
+
+  //       case 'renewal':
+  //           return null;
+  //   }
+  // }
 
 }

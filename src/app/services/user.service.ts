@@ -20,12 +20,8 @@ export class UserService {
   }
 
   initializeUser(): Promise<User | null | undefined> {
-    console.log("initializerUser");
-    console.log();
     return this.http.get<ApiResponse<User>>(`${this.apiUrl}/users/me`).toPromise()
       .then(response => {
-        console.log("initializerUserResp");
-        console.log(response?.value);
         this.user.set(response?.value);
         return response?.value;
       });
@@ -59,6 +55,7 @@ export class UserService {
       return of(result as T);
     };
   }
+  
   log(arg0: string) {
     throw new Error('Method not implemented.');
   }
