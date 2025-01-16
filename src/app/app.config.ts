@@ -14,13 +14,14 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(
       withHttpTransferCacheOptions({ includePostRequests: true })),
     // provideHttpClient(withInterceptors([AuthInterceptor]), withFetch()),
-    provideHttpClient(withInterceptorsFromDi()),
+    // provideHttpClient(withInterceptorsFromDi()),
     provideHttpClient(withFetch()),
     { 
       provide: HTTP_INTERCEPTORS, 
       useClass: AuthInterceptor, 
       multi: true, 
     },
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } })
   ]
 };

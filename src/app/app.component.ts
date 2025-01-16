@@ -19,8 +19,9 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.primengConfig.ripple = true;
 
-    this.userService.initializeUser()/* .catch(error => {
+    // this.userService.initializeUser();
+    /* .catch(error => {
       console.error("Erreur lors de l'initialisation de l'ID utilisateur", error);
-    } )*/;
+    } )*/
   }
 }

@@ -10,7 +10,7 @@ export class AuthChildGuard implements CanActivateChild {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivateChild(): boolean {
-    if (this.authService.isAuthenticated()) {
+    if (this.authService.isLoggedIn()) {
       return true;
     } else {
       this.router.navigate(['/login']);

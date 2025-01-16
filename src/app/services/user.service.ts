@@ -19,13 +19,11 @@ export class UserService {
     return this.http.get<User[]>(`${this.apiUrl}/users/me`);
   }
 
-  initializeUser(): Promise<User | null | undefined> {
-    return this.http.get<ApiResponse<User>>(`${this.apiUrl}/users/me`).toPromise()
-      .then(response => {
-        this.user.set(response?.value);
-        return response?.value;
-      });
-  }
+  // async initializeUser(): Promise<User | null | undefined> {
+  //   const response = await this.http.get<ApiResponse<User>>(`${this.apiUrl}/users/me`).toPromise();
+  //   this.user.set(response?.value);
+  //   return response?.value;
+  // }
 
   getUser() {
     return this.user;

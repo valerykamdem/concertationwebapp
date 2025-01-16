@@ -20,7 +20,7 @@ export const routes: Routes = [
         path:'',  component: LayoutComponent,
         children:[
             {
-                path:'',
+                path:'dashboard',
                 loadComponent: () => import('./components/shared/dashboard/dashboard.component')
                 .then(module => module.DashboardComponent),
                 resolve: { user: UserResolver },

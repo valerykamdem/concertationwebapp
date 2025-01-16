@@ -32,7 +32,7 @@ export class LoginComponent implements OnDestroy {
 
   constructor(private authService: AuthService, private router: Router) { 
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/']);
+      // this.router.navigate(['/']);
     }
   }
 

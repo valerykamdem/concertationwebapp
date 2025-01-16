@@ -15,24 +15,27 @@ import { ToastModule } from 'primeng/toast';
 import { DividerModule } from 'primeng/divider';
 import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
+import { ConfiguratorComponent } from "../configurator/configurator.component";
 
 @Component({
   selector: 'app-topbar',
   standalone: true,
   imports: [
-    CommonModule, 
-    RouterLink, 
-    ButtonModule, 
+    CommonModule,
+    RouterLink,
+    ButtonModule,
     MenubarModule,
     AvatarModule,
-    MenuModule, 
+    MenuModule,
     ButtonModule,
-    RippleModule, 
+    RippleModule,
     NgIf,
     BadgeModule,
     DividerModule,
-    ConfirmDialogModule, 
-    ToastModule],
+    ConfirmDialogModule,
+    ToastModule,
+    ConfiguratorComponent
+],
     providers: [ConfirmationService, MessageService],
   templateUrl: './topbar.component.html',
   styleUrl: './topbar.component.css'
@@ -46,15 +49,16 @@ export class TopbarComponent implements OnInit {
   @ViewChild('topbarmenu') menu!: ElementRef;
 
   userService = inject(UserService);
+  layoutService = inject(LayoutService);
+  authService = inject(AuthService);
+  confirmationService = inject(ConfirmationService); 
+  messageService = inject(MessageService);
 
-  user = this.userService.getUser();
+  // user = undefined;// this.userService.getUser();
 
   items!: MenuItem[] | undefined;
 
-  constructor(public layoutService: LayoutService,
-    public authService: AuthService,
-    private confirmationService: ConfirmationService, 
-    private messageService: MessageService) { } 
+  constructor() { } 
 
   ngOnInit() {
         this.items = [
@@ -106,6 +110,10 @@ export class TopbarComponent implements OnInit {
             this.messageService.add({ severity: 'success', summary: 'Rejected', detail: 'Bienvenue', life: 3000 });
         }
     });
-}
+  }
+
+  toggleDarkMode() {
+    this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
+  }
 
 }

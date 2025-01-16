@@ -16,53 +16,54 @@ import { TableModule } from 'primeng/table';
   standalone: true,
   imports: [
     CommonModule,
-    CardModule, 
+    CardModule,
     AvatarModule,
-    RouterLink,
-    RouterOutlet,
     PaginatorModule,
-    TableModule],
+    TableModule
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
 
   userService = inject(UserService);
-  user = this.userService.getUser(); //signal<User | null | undefined>(undefined);
+  accountService = inject(AccountService);
+  operationService = inject(OperationService);
+  user = null;
+  // user = this.userService.getUser(); //signal<User | null | undefined>(undefined);
   accounts = signal<Account[] | null | undefined>(undefined);
   balanceTotal = 0;
 
-  constructor(private accountService: AccountService,
-    private operationService: OperationService,
+  constructor(
     private route: ActivatedRoute,
     private router: Router) { }
 
   ngOnInit() {
-    this.getAccount(); 
+    // this.getAccount(); 
   }
 
-  loadAccounts(): void {
-     this.accountService.getAccounts().subscribe((response: ApiResponses<Account>) => {
-      if(response.isSuccess){
-        this.accounts.set(response.value);
-        console.log(this.accounts());
-      }     
-    }); 
-  }
+  // loadAccounts(): void {
+  //    this.accountService.getAccounts().subscribe((response: ApiResponses<Account>) => {
+  //     if(response.isSuccess){
+  //       this.accounts.set(response.value);
+  //       console.log(this.accounts());
+  //     }     
+  //   }); 
+  // }
 
-  getAccount(): void {
-    this.accountService.getAccount(this.user()?.id!)
-      .subscribe((response: ApiResponses<Account>) => {
-        if(response.isSuccess){
-          this.accounts.set(response.value);
-          this.balanceTotal = response.value.reduce((accumulateur, account) => accumulateur + account.balance, 0);
-        }
-      });
-  }
+  // getAccount(): void {
+  //   this.accountService.getAccount(this.user()?.id!)
+  //     .subscribe((response: ApiResponses<Account>) => {
+  //       if(response.isSuccess){
+  //         this.accounts.set(response.value);
+  //         this.balanceTotal = response.value.reduce((accumulateur, account) => accumulateur + account.balance, 0);
+  //       }
+  //     });
+  // }
 
-  goToOperation(account: Account) {
-    this.router.navigate(['/operations/', account.id]);
-  }
+  // goToOperation(account: Account) {
+  //   this.router.navigate(['/operations/', account.id]);
+  // }
 
   // getSeverity(status: string) {
   //   switch (status) {
