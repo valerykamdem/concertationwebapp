@@ -1,52 +1,43 @@
 import { Component, ElementRef, ViewChild, OnInit, signal, inject } from '@angular/core';
 import { LayoutService } from '../../../services/layout.service';
-import { MenuItem } from 'primeng/api';
+import { MenuItem,ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule, NgIf } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { MenubarModule } from 'primeng/menubar';
+// import { MenubarModule } from 'primeng/menubar';
 import { AvatarModule } from 'primeng/avatar';
 import { MenuModule } from 'primeng/menu';
 import { RippleModule } from 'primeng/ripple';
 import { BadgeModule } from 'primeng/badge';
+import { StyleClassModule } from 'primeng/styleclass';
 import { ToastModule } from 'primeng/toast';
-import { DividerModule } from 'primeng/divider';
 import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
 import { ConfiguratorComponent } from "../configurator/configurator.component";
 
 @Component({
-  selector: 'app-topbar',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    ButtonModule,
-    MenubarModule,
-    AvatarModule,
-    MenuModule,
-    ButtonModule,
-    RippleModule,
-    NgIf,
-    BadgeModule,
-    DividerModule,
-    ConfirmDialogModule,
-    ToastModule,
-    ConfiguratorComponent
-],
+    selector: 'app-topbar',
+    imports: [
+        CommonModule,
+        RouterModule,
+        // MenubarModule,
+        AvatarModule,
+        MenuModule,
+        ButtonModule,
+        RippleModule,
+        BadgeModule,
+        ConfirmDialogModule,
+        ToastModule,
+        ConfiguratorComponent, 
+        StyleClassModule
+    ],
     providers: [ConfirmationService, MessageService],
-  templateUrl: './topbar.component.html',
-  styleUrl: './topbar.component.css'
+    templateUrl: './topbar.component.html',
+    styleUrl: './topbar.component.css'
 })
 export class TopbarComponent implements OnInit {
-  
-  @ViewChild('menubutton') menuButton!: ElementRef;
 
-  @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
-
-  @ViewChild('topbarmenu') menu!: ElementRef;
 
   userService = inject(UserService);
   layoutService = inject(LayoutService);

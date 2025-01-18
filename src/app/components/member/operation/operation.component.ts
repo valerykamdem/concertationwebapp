@@ -11,14 +11,14 @@ import { ApiResponse, ApiResponses } from '../../../interfaces/api-response';
 import { TableModule } from 'primeng/table';
 
 @Component({
-  selector: 'app-operation',
-  standalone: true,
-  imports: [
-    CommonModule, 
-    ButtonModule,
-    TableModule],
-  templateUrl: './operation.component.html',
-  styleUrl: './operation.component.css'
+    selector: 'app-operation',
+    imports: [
+        CommonModule,
+        ButtonModule,
+        TableModule
+    ],
+    templateUrl: './operation.component.html',
+    styleUrl: './operation.component.css'
 })
 export class OperationComponent implements OnInit {
 

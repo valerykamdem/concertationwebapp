@@ -21,7 +21,7 @@
                     />
                 </g>
             </svg>
-            <span>SAKAI</span>
+            <span>CONCERTATION</span>
         </a>
     </div>
 
@@ -38,7 +38,7 @@
                     enterActiveClass="animate-scalein"
                     leaveToClass="hidden"
                     leaveActiveClass="animate-fadeout"
-                    
+                    [hideOnOutsideClick]="true"
                 >
                     <i class="pi pi-palette"></i>
                 </button>
@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout">
+        <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
             <i class="pi pi-ellipsis-v"></i>
         </button>
 
@@ -71,9 +71,9 @@
 
 
   
-  <div class="layout-topbar">
+  <!-- <div class="layout-topbar">
     <a class="layout-topbar-logo" routerLink="">
-        <!-- <img src="assets/images/logo/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo"> -->
+        <img src="assets/images/logo/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo">
         <img src="assets/images/logo/logo.png" alt="logo">
         <span>CONCERTATION</span>
     </a>
@@ -116,7 +116,7 @@
             <p-button pRipple class="relative overflow-hidden w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
                 <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" class="mr-2" shape="circle" />
                 <span class="inline-flex flex-column">
-                    <!-- <span class="font-bold" *ngIf="user()">{{ user()?.firstName }} {{ user()?.lastName }} </span> -->
+                    <span class="font-bold" *ngIf="user()">{{ user()?.firstName }} {{ user()?.lastName }} </span>
                     <span class="text-sm">Admin</span>
                 </span>
             </p-button>
@@ -153,4 +153,4 @@
             </div>
         </ng-template>
     </p-confirmDialog>
-    <p-button (onClick)="confirm()" icon="pi pi-check" label="Confirm" />
+    <p-button (onClick)="confirm()" icon="pi pi-check" label="Confirm" /> -->

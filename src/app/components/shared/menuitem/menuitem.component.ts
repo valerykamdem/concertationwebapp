@@ -6,11 +6,10 @@ import { MenuService } from '../../../services/menu.service';
 import { LayoutService } from '../../../services/layout.service';
 
 @Component({
-  selector: 'app-menuitem',
-  standalone: true,
-  imports: [CommonModule, RouterLink, RouterModule],
-  templateUrl: './menuitem.component.html',
-  styleUrl: './menuitem.component.css'
+    selector: 'app-menuitem',
+    imports: [CommonModule, RouterLink, RouterModule],
+    templateUrl: './menuitem.component.html',
+    styleUrl: './menuitem.component.css'
 })
 export class MenuitemComponent implements OnInit, OnDestroy {
     @Input() item: any;

@@ -37,11 +37,10 @@ declare type SurfacesType = {
 };
 
 @Component({
-  selector: 'app-configurator',
-  standalone: true,
-  imports: [CommonModule, FormsModule, SelectButtonModule],
-  templateUrl: './configurator.component.html',
-  styleUrl: './configurator.component.css'
+    selector: 'app-configurator',
+    imports: [CommonModule, FormsModule, SelectButtonModule],
+    templateUrl: './configurator.component.html',
+    styleUrl: './configurator.component.css'
 })
 export class ConfiguratorComponent {
 

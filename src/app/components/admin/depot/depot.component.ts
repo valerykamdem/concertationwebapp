@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-depot',
-  standalone: true,
-  imports: [],
-  templateUrl: './depot.component.html',
-  styleUrl: './depot.component.css'
+    selector: 'app-depot',
+    imports: [],
+    templateUrl: './depot.component.html',
+    styleUrl: './depot.component.css'
 })
 export class DepotComponent implements OnInit {
   menuItems: any[] = [];

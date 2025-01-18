@@ -5,6 +5,8 @@ import { provideClientHydration, withHttpTransferCacheOptions } from '@angular/p
 import { provideHttpClient, withFetch, withInterceptors, HTTP_INTERCEPTORS, withInterceptorsFromDi } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeng/themes/aura';
 
 
 export const appConfig: ApplicationConfig = {

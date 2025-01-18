@@ -6,17 +6,16 @@ import { AvatarModule } from 'primeng/avatar';
 import { PanelMenuModule } from 'primeng/panelmenu';
 
 @Component({
-  selector: 'app-menu',
-  standalone: true,
-  imports: [
-    NgFor, 
-    NgIf, 
-    MenuitemComponent,
-    AvatarModule,
-    PanelMenuModule
-  ],
-  templateUrl: './menu.component.html',
-  styleUrl: './menu.component.css'
+    selector: 'app-menu',
+    imports: [
+        NgFor,
+        NgIf,
+        MenuitemComponent,
+        AvatarModule,
+        PanelMenuModule
+    ],
+    templateUrl: './menu.component.html',
+    styleUrl: './menu.component.css'
 })
 export class MenuComponent implements OnInit {
 

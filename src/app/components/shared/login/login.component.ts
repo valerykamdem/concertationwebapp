@@ -11,26 +11,28 @@ import { Subscription } from 'rxjs';
 import { PasswordModule } from 'primeng/password';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  host: {ngSkipHydration: 'true'},
-  imports: [
-    ReactiveFormsModule, 
-    RouterLink, 
-    InputTextModule, 
-    CheckboxModule, 
-    ButtonModule, 
-    PasswordModule],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+    selector: 'app-login',
+    host: { ngSkipHydration: 'true' },
+    imports: [
+        ReactiveFormsModule,
+        RouterLink,
+        InputTextModule,
+        CheckboxModule,
+        ButtonModule,
+        PasswordModule
+    ],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnDestroy {
 
   private formBuilder = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
   private loginSubscription: Subscription | null = null;
   valCheck: string[] = ['remember'];
 
-  constructor(private authService: AuthService, private router: Router) { 
+  constructor() { 
     if (this.authService.isLoggedIn()) {
       // this.router.navigate(['/']);
     }

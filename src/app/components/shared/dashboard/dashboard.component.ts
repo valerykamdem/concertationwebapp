@@ -12,17 +12,16 @@ import { PaginatorModule } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
 
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CardModule,
-    AvatarModule,
-    PaginatorModule,
-    TableModule
-],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+    selector: 'app-dashboard',
+    imports: [
+        CommonModule,
+        CardModule,
+        AvatarModule,
+        PaginatorModule,
+        TableModule
+    ],
+    templateUrl: './dashboard.component.html',
+    styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
 

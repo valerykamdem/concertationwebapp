@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Renderer2, ViewChild } from '@angular/core';
+import { Component, OnDestroy, Renderer2, ViewChild, inject, Inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router'
 import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
@@ -7,24 +7,27 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { TopbarComponent } from '../topbar/topbar.component';
 import { filter, Subscription } from 'rxjs';
 import { LayoutService } from '../../../services/layout.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 
 
 @Component({
-  selector: 'app-layout',
-  standalone: true,
-  imports: [
-    RouterOutlet,
-    FooterComponent, 
-    SidebarComponent, 
-    TopbarComponent, 
-    // ConfigComponent,
-    CommonModule],
-  templateUrl: './layout.component.html',
-  styleUrl: './layout.component.css'
+    selector: 'app-layout',
+    imports: [
+        RouterOutlet,
+        FooterComponent,
+        SidebarComponent,
+        TopbarComponent,
+        CommonModule
+    ],
+    templateUrl: './layout.component.html',
+    styleUrl: './layout.component.css'
 })
 
 export class LayoutComponent {
+
+    document = inject(DOCUMENT);
+    layoutService = inject(LayoutService);
+
     overlayMenuOpenSubscription: Subscription;
 
     menuOutsideClickListener: any;
@@ -34,7 +37,6 @@ export class LayoutComponent {
     @ViewChild(TopbarComponent) appTopBar!: TopbarComponent;
 
     constructor(
-        public layoutService: LayoutService,
         public renderer: Renderer2,
         public router: Router
     ) {
