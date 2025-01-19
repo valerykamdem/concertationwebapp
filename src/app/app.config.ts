@@ -27,3 +27,35 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } })
   ]
 };
+
+
+// import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+// import { routes } from './app.routes';
+// import { provideClientHydration, withHttpTransferCacheOptions } from '@angular/platform-browser';
+// import { provideHttpClient, withFetch, withInterceptors, HTTP_INTERCEPTORS, withInterceptorsFromDi } from '@angular/common/http';
+// import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+// import { provideRouter, withEnabledBlockingInitialNavigation, withInMemoryScrolling } from '@angular/router';
+// import { AuthInterceptor } from './interceptors/auth.interceptor';
+// import { providePrimeNG } from 'primeng/config';
+// import Aura from '@primeng/themes/aura';
+
+
+// export const appConfig: ApplicationConfig = {
+//   providers: [
+//     provideRouter(routes, withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }), withEnabledBlockingInitialNavigation()),
+//     // provideZoneChangeDetection({ eventCoalescing: true }), 
+//     // provideRouter(routes), 
+//     provideClientHydration(
+//       withHttpTransferCacheOptions({ includePostRequests: true })),
+//     // provideHttpClient(withInterceptors([AuthInterceptor]), withFetch()),
+//     // provideHttpClient(withInterceptorsFromDi()),
+//     provideHttpClient(withFetch()),
+//     { 
+//       provide: HTTP_INTERCEPTORS, 
+//       useClass: AuthInterceptor, 
+//       multi: true, 
+//     },
+//     provideAnimationsAsync(),
+//     providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } })
+//   ]
+// };

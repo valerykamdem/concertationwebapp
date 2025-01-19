@@ -4,7 +4,9 @@
             <i class="pi pi-bars"></i>
         </button>
         <a class="layout-topbar-logo" routerLink="/">
-            <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- <img src="assets/images/logo/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo"> -->
+                <img src="assets/images/logo.png" width="54" height="11" alt="logo">
+            <!-- <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                     fill-rule="evenodd"
                     clip-rule="evenodd"
@@ -20,8 +22,8 @@
                         fill="var(--primary-color)"
                     />
                 </g>
-            </svg>
-            <span>CONCERTATION</span>
+            </svg> -->
+            CONCERTATION<span class="text-primary">APP</span>
         </a>
     </div>
 
@@ -60,97 +62,67 @@
                     <i class="pi pi-inbox"></i>
                     <span>Messages</span>
                 </button>
-                <button type="button" class="layout-topbar-action">
+                <button type="button" class="layout-topbar-action" (click)="profilMenu.toggle($event)">
                     <i class="pi pi-user"></i>
                     <span>Profile</span>
                 </button>
+                <p-menu #profilMenu [model]="items" [popup]="true" class="flex justify-center" styleClass="w-full md:w-60">
+                    <ng-template #start>
+                        <span class="inline-flex items-center gap-1 px-2 py-2">
+                            <!-- <svg width="33" height="35" viewBox="0 0 33 35" fill="none" xmlns="http://www.w3.org/2000/svg" class="block mx-auto">
+                                <path d="..." fill="var(--primary-color)" />
+                            </svg> -->
+                            <span class="text-xl font-semibold">
+                                CONCERTATION <span class="text-primary">APP</span>
+                            </span>
+                        </span>
+                    </ng-template>
+                    <ng-template #submenuheader let-item>
+                        <span class="text-primary font-bold">{{ item.label }}</span>
+                    </ng-template>
+                    <ng-template #item let-item>
+                        <a pRipple class="flex items-center p-menu-item-link">
+                            <span [class]="item.icon"></span>
+                            <span class="ml-2">{{ item.label }}</span>
+                            <p-badge *ngIf="item.badge" class="ml-auto" [value]="item.badge" />
+                            <span *ngIf="item.shortcut" class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1">
+                                {{ item.shortcut }}
+                            </span>
+                        </a>
+                    </ng-template>
+                    <ng-template #end>
+                        <button pRipple class="relative overflow-hidden w-full border-0 bg-transparent flex items-start p-2 pl-4 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-none cursor-pointer transition-colors duration-200">
+                            <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" class="mr-2" shape="circle" />
+                            <span class="inline-flex flex-col">
+                                <!-- <span class="font-bold" *ngIf="user()">{{ user()?.firstName }} {{ user()?.lastName }} </span> -->
+                                <span class="font-bold">Amy Elsner</span>
+                                <span class="text-sm">Admin</span>
+                            </span>
+                        </button>
+                    </ng-template>
+                </p-menu>
             </div>
         </div>
     </div>
-</div>`
-
-
-  
-  <!-- <div class="layout-topbar">
-    <a class="layout-topbar-logo" routerLink="">
-        <img src="assets/images/logo/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo">
-        <img src="assets/images/logo/logo.png" alt="logo">
-        <span>CONCERTATION</span>
-    </a>
-
-    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
-        <i class="pi pi-bars"></i>
-    </button>
-
-    <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button" (click)="layoutService.showProfileSidebar()">
-        <i class="pi pi-ellipsis-v"></i>
-    </button>
-
-    <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService._state.configSidebarVisible}">
-
-        <i class="pi pi-envelope p-text-secondary" pBadge style="font-size: 2rem" value="2"></i>
-        <p-divider layout="vertical" />
-        <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" 
-                    shape="square" size="large" (click)="avatarMenu.toggle($event)" />
-
-        <p-menu #avatarMenu [model]="items" [popup]="true" styleClass="w-full md:w-15rem">
-        <ng-template pTemplate="item" let-item>
-            <ng-container *ngIf="item.routerLink; else logout">
-           <a pRipple class="flex align-items-center p-menuitem-link" [routerLink]="item.routerLink">
-                <span [class]="item.icon"></span>
-                <span class="ml-2">{{ item.label }}</span>
-                <p-badge *ngIf="item.badge" class="ml-auto" [value]="item.badge" />
-                <span *ngIf="item.shortcut" class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">
-                    {{ item.shortcut }}
-                </span>
-            </a>
-        </ng-container>
-         </ng-template>
-         <ng-template #logout>
-            <a pRipple class="flex align-items-center p-menuitem-link">
-                <span class="pi pi-sign-out"></span>
-                <span class="ml-2">LogOut</span>
-            </a>
-        </ng-template> 
-        <ng-template pTemplate="end">
-            <p-button pRipple class="relative overflow-hidden w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround">
-                <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" class="mr-2" shape="circle" />
-                <span class="inline-flex flex-column">
-                    <span class="font-bold" *ngIf="user()">{{ user()?.firstName }} {{ user()?.lastName }} </span>
-                    <span class="text-sm">Admin</span>
-                </span>
-            </p-button>
-        </ng-template> 
-    </p-menu>
-    </div>
 </div>
 
+<div class="card flex justify-center">
     <p-toast />
-    <p-confirmDialog #cd>
-        <ng-template pTemplate="headless" let-message>
-            <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
-                <div class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem">
-                    <i class="pi pi-question text-5xl"></i>
+    <p-confirmdialog #cd>
+        <ng-template #headless let-message let-onAccept="onAccept" let-onReject="onReject">
+            <div class="flex flex-col items-center p-8 bg-surface-0 dark:bg-surface-900 rounded">
+                <div
+                    class="rounded-full bg-primary text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20"
+                >
+                    <i class="pi pi-question !text-5xl"></i>
                 </div>
-                <span class="font-bold text-2xl block mb-2 mt-4">
-                    {{ message.header }}
-                </span>
+                <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
                 <p class="mb-0">{{ message.message }}</p>
-                <div class="flex align-items-center gap-2 mt-4">
-                    <button 
-                        pButton 
-                        label="Deconecter" 
-                        (click)="cd.accept()" 
-                        class="w-8rem">
-                    </button>
-                    <button 
-                        pButton 
-                        label="Annuler"
-                        (click)="cd.reject()" 
-                        class="p-button-outlined w-8rem ">
-                    </button>
+                <div class="flex items-center gap-2 mt-6">
+                    <p-button label="Deconnecter" (onClick)="onAccept()" styleClass="w-32"></p-button>
+                    <p-button label="Annuler" [outlined]="true" (onClick)="onReject()" styleClass="w-32"></p-button>
                 </div>
             </div>
         </ng-template>
-    </p-confirmDialog>
-    <p-button (onClick)="confirm()" icon="pi pi-check" label="Confirm" /> -->
+    </p-confirmdialog>
+</div>

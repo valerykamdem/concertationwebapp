@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Renderer2, ViewChild, inject, Inject } from '@angular/core';
+import { Component, OnDestroy, Renderer2, ViewChild, inject, Inject, PLATFORM_ID } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router'
 import { AuthService } from '../../../services/auth.service';
 import { UserService } from '../../../services/user.service';
@@ -7,8 +7,7 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { TopbarComponent } from '../topbar/topbar.component';
 import { filter, Subscription } from 'rxjs';
 import { LayoutService } from '../../../services/layout.service';
-import { CommonModule, DOCUMENT } from '@angular/common';
-
+import { CommonModule, DOCUMENT,  isPlatformBrowser} from '@angular/common';
 
 @Component({
     selector: 'app-layout',
@@ -25,7 +24,7 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 
 export class LayoutComponent {
 
-    document = inject(DOCUMENT);
+    //document = inject(DOCUMENT);
     layoutService = inject(LayoutService);
 
     overlayMenuOpenSubscription: Subscription;
@@ -37,6 +36,8 @@ export class LayoutComponent {
     @ViewChild(TopbarComponent) appTopBar!: TopbarComponent;
 
     constructor(
+        @Inject(PLATFORM_ID) private platformId: Object,
+        @Inject(DOCUMENT) private document: Document,
         public renderer: Renderer2,
         public router: Router
     ) {
@@ -85,7 +86,8 @@ export class LayoutComponent {
     }
 
     unblockBodyScroll(): void {
-        if (document.body.classList) {
+        // if (document.body.classList) {
+        if (isPlatformBrowser(this.platformId)) {
             document.body.classList.remove('blocked-scroll');
         } else {
             document.body.className = document.body.className.replace(new RegExp('(^|\\b)' + 'blocked-scroll'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');

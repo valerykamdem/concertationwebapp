@@ -40,7 +40,8 @@ export class LoginComponent implements OnDestroy {
 
       loginFormGroup = this.formBuilder.group({
         email: ['', [Validators.required, Validators.email]],
-        password: ['', Validators.required]
+        password: ['', Validators.required],
+        checked: ['']
       });
 
 

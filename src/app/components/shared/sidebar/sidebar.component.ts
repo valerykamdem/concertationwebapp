@@ -5,11 +5,10 @@ import { MenuComponent } from '../menu/menu.component';
 
 @Component({
     selector: 'app-sidebar',
-    imports: [
-        MenuComponent
-    ],
-    templateUrl: './sidebar.component.html',
-    styleUrl: './sidebar.component.css'
+    imports: [MenuComponent],
+    template: ` <div class="layout-sidebar">
+        <app-menu></app-menu>
+    </div>`
 })
 export class SidebarComponent {
 

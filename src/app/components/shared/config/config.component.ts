@@ -9,27 +9,19 @@
 // import { ButtonModule } from 'primeng/button';
 
 // @Component({
-//   selector: 'app-config',
+//   selector: 'app-floating-configurator',
 //   standalone: true,
-//   imports: [
-//     CommonModule,
-//     FormsModule,
-//     SidebarModule,
-//     RadioButtonModule,
-//     ButtonModule,
-//     InputSwitchModule],
-//   templateUrl: './config.component.html',
+//   imports: [ButtonModule, StyleClassModule, Configurator],
+//   templateUrl: './floatingconfigurator.component.html',
 //   styleUrl: './config.component.css'
 // })
 // export class ConfigComponent {
 //   @Input() minimal: boolean = false;
 
 //     scales: number[] = [12, 13, 14, 15, 16];
-
-//     constructor(
-//         public layoutService: LayoutService,
-//         public menuService: MenuService
-//     ) {}
+//     layoutService = inject(LayoutService);
+//     menuService = inject(MenuService);
+    
 
 //     get visible(): boolean {
 //         return this.layoutService.state.configSidebarVisible;
@@ -111,4 +103,4 @@
 //     incrementScale() {
 //         this.scale++;
 //     }
-// }
+//}

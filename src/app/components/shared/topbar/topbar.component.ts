@@ -4,10 +4,9 @@ import { MenuItem,ConfirmationService, MessageService } from 'primeng/api';
 import { CommonModule, NgIf } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-// import { MenubarModule } from 'primeng/menubar';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 import { AvatarModule } from 'primeng/avatar';
-import { MenuModule } from 'primeng/menu';
+import { Menu } from 'primeng/menu';
 import { RippleModule } from 'primeng/ripple';
 import { BadgeModule } from 'primeng/badge';
 import { StyleClassModule } from 'primeng/styleclass';
@@ -21,25 +20,23 @@ import { ConfiguratorComponent } from "../configurator/configurator.component";
     imports: [
         CommonModule,
         RouterModule,
-        // MenubarModule,
         AvatarModule,
-        MenuModule,
+        Menu,
         ButtonModule,
         RippleModule,
         BadgeModule,
-        ConfirmDialogModule,
+        ConfirmDialog,
         ToastModule,
         ConfiguratorComponent, 
-        StyleClassModule
-    ],
+        StyleClassModule],
     providers: [ConfirmationService, MessageService],
-    templateUrl: './topbar.component.html',
-    styleUrl: './topbar.component.css'
+    templateUrl: './topbar.component.html'
+    // styleUrl: './topbar.component.css'
 })
 export class TopbarComponent implements OnInit {
 
 
-  userService = inject(UserService);
+  // userService = inject(UserService);
   layoutService = inject(LayoutService);
   authService = inject(AuthService);
   confirmationService = inject(ConfirmationService); 
@@ -54,7 +51,7 @@ export class TopbarComponent implements OnInit {
   ngOnInit() {
         this.items = [
         {
-          label: 'Profile',
+          // label: 'Profile',
           items: [
             {
               label: 'Profil',
@@ -86,7 +83,7 @@ export class TopbarComponent implements OnInit {
 
   logout() {
       this.authService.logout();
-      this.userService.setUserNull();
+      // this.userService.setUserNull();
   }
 
   confirm() {
