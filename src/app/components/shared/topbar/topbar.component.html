@@ -40,15 +40,15 @@
                     enterActiveClass="animate-scalein"
                     leaveToClass="hidden"
                     leaveActiveClass="animate-fadeout"
-                    [hideOnOutsideClick]="true"
-                >
+                    [hideOnOutsideClick]="true">
                     <i class="pi pi-palette"></i>
                 </button>
                 <app-configurator />
             </div>
         </div>
 
-        <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
+        <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden"
+                enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
             <i class="pi pi-ellipsis-v"></i>
         </button>
 
@@ -95,8 +95,10 @@
                             <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" class="mr-2" shape="circle" />
                             <span class="inline-flex flex-col">
                                 <!-- <span class="font-bold" *ngIf="user()">{{ user()?.firstName }} {{ user()?.lastName }} </span> -->
-                                <span class="font-bold">Amy Elsner</span>
-                                <span class="text-sm">Admin</span>
+                                <span class="font-bold">
+                                  {{ userService.user()?.firstName }} {{ userService.user()?.lastName }}
+                                </span>
+<!--                                <span class="text-sm">Admin</span>-->
                             </span>
                         </button>
                     </ng-template>

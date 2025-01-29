@@ -1,61 +1,79 @@
-import { Component, OnInit, signal } from '@angular/core';
+import {Component, inject, input, Input, InputSignal, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { OperationService } from '../../../services/operation.service';
-import { AccountService } from '../../../services/account.service';
-import { Account } from '../../../models/account.model';
-import { Location } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Operation } from '../../../models/operation.model';
-import { ApiResponse, ApiResponses } from '../../../interfaces/api-response';
 import { TableModule } from 'primeng/table';
+import {Dialog} from "primeng/dialog";
+import {Account} from "../../../models/account.model";
+import {TagModule} from "primeng/tag";
 
 @Component({
     selector: 'app-operation',
-    imports: [
-        CommonModule,
-        ButtonModule,
-        TableModule
-    ],
+  imports: [
+    CommonModule,
+    TagModule,
+    ButtonModule,
+    TableModule,
+    Dialog
+  ],
     templateUrl: './operation.component.html',
     styleUrl: './operation.component.css'
 })
-export class OperationComponent implements OnInit {
+export class OperationComponent {
 
-  operations1 = signal<Operation[] | null | undefined>(undefined);
-  operations!: Operation[];
-  balanceTotal = 0;
-  lastOperation = signal<Operation | null | undefined>(undefined);
+  operation = signal<Operation | null>(null);
+  selectedOperation!: Operation;
+  visible: boolean = false;
 
-  constructor(
-    private accountService: AccountService,
-    private operationService: OperationService,
-    private location: Location,
-    private route: ActivatedRoute,
-    private router: Router) {}
+  account: InputSignal<Account> = input(new Account());
 
-  ngOnInit() {
-    this.getOperationsByAccount();
+  onRowSelect(event: any) {
+    // console.log(event.data);
+    this.visible = true;
+    this.operation.set(event.data);
   }
 
-  getOperationsByAccount(): void {
-    const accountId = this.route.snapshot.paramMap.get('accountId')!;
-    this.operationService.getOperationByAccountId(accountId)
-      .subscribe((response: ApiResponses<Operation>) => {
-        if(response.isSuccess){
-          this.operations = response.value;
-          this.lastOperation.set(this.operations[0]);
-          console.log("last element", this.lastOperation())
-        }
-      });
+  getAmountWithSign(operation: Operation): string {
+    const amount = operation.amount.toFixed(2); // Formatage à 2 décimales
+    // const type = operation.operationType;
+
+    switch (operation.operationType) {
+      case 1:
+        return `+ ${amount}`;
+      case 2:
+        return `- ${amount}`;
+      case 3:
+        return `+ ${amount}`;
+      case 4:
+        return `- ${amount}`;
+      case 5:
+        return `- ${amount}`;
+      case 6:
+        return `+ ${amount}`;
+      default:
+        console.log('Unknown status.');
+        return amount.toString();
+    }
   }
 
-  goBack(): void {
-    this.location.back();
-  }
-
-  goToTransfert(): void {
-    this.router.navigate(['/transfert']);
+  getSeverity(opType: number) {
+    switch (opType) {
+      case 1:
+        return 'success';
+      case 2:
+        return 'danger';
+      case 3:
+        return 'success';
+      case 4:
+        return 'danger';
+      case 5:
+        return 'danger';
+      case 6:
+        return 'info';
+      default:
+        console.log('Unknown status.');
+        return 'contrast';
+    }
   }
 
 }

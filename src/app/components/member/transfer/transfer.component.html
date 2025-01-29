@@ -1,0 +1,179 @@
+@if (activeIndex === 0) {
+  <div class="card grid grid-cols-1 md:grid-cols-1 gap-4">
+    <div class="flex flex-wrap gap-6">
+      <span class="text-primary font-semibold text-xl"> Selectionner le compte débit </span>
+    </div>
+    <div *ngIf="selectedAccount()">
+    <span
+      class="font-semibold text-xl"
+      *ngIf="selectedAccount()?.accountType === 1">
+      Poche / <span class="text-primary font-medium">{{ balance }} FCFA</span>
+    </span>
+      <span
+        class="font-semibold text-xl"
+        *ngIf="selectedAccount()?.accountType === 2">
+      Épargne / <span class="text-primary font-medium">{{ balance }} FCFA</span>
+    </span>
+    </div>
+
+    <p-inputgroup>
+      <p-inputgroup-addon>
+        <div
+          class="flex items-center justify-center bg-primary dark:bg-primary rounded-border"
+          style="width: 2.2rem; height: 2.2rem">
+          @if(selectedAccount()?.accountType === 1){
+            <i class="pi pi-wallet text-white !text-xl"></i>
+          }@else{
+            <i class="pi pi-building-columns text-white !text-xl"></i>
+          }
+        </div>
+      </p-inputgroup-addon>
+      <p-floatlabel class="w-full md:w-56" variant="on">
+        <p-select
+          [options]="accounts()"
+          [(ngModel)]="selectedAccount"
+          optionLabel="accountNumber"
+          placeholder="Select an Account"
+          class="w-full md:w-56"
+          (onChange)="onChange($event)"/>
+        <label *ngIf="selectedAccount()?.accountType === 1"><span class="text-primary font-medium">Compte Poche / {{ balance }} FCFA </span></label>
+        <label *ngIf="selectedAccount()?.accountType === 2"><span class="text-primary font-medium">Compte Épargne / {{ balance }} FCFA </span></label>
+      </p-floatlabel>
+    </p-inputgroup>
+  </div>
+}
+
+@if (activeIndex === 0) {
+  <form [formGroup]="transferForm" (ngSubmit)="goToSummary()">
+    <div class="card grid grid-cols-1 md:grid-cols-1 gap-4">
+      <div class="text-primary font-semibold text-xl">
+        <i class="pi pi-dollar" style="font-size: 1.5rem;">
+        {{ transferTitle }}
+        </i>
+      </div>
+      <span class="flex justify-center">
+        <p-selectbutton [options]="stateOptions" formControlName="selectedAcc"
+                        optionLabel="label"
+                        optionValue="value"
+                        aria-labelledby="basic"
+                        (onOptionClick)="onOptionClick($event)"/>
+      </span>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-user"></i>
+        </p-inputgroup-addon>
+        <p-floatlabel variant="on">
+          <input
+            pInputText
+            id="accountNbr"
+            type="text"
+            formControlName="toAccountNumber"
+          />
+          <label for="accountNbr">Numero de compte</label>
+        </p-floatlabel>
+      </p-inputgroup>
+
+      <span *ngIf="errorAccountNbr()" class="text-red-500 font-medium">
+        {{ errorAccountNbr() }}
+      </span>
+
+      <p-inputgroup>
+        <p-inputgroup-addon>XAF</p-inputgroup-addon>
+        <p-floatlabel variant="on">
+          <p-inputnumber
+            formControlName="amount"
+            inputId="amount"
+            mode="decimal"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="5"
+            currency="XAF"
+            locale="en-US"/>
+          <label>Montant</label>
+        </p-floatlabel>
+      </p-inputgroup>
+
+      <div *ngIf="transferForm.get('amount')?.invalid && transferForm.get('amount')?.touched" class="p-error">
+        <p-message severity="warn" icon="pi pi-exclamation-triangle"
+                   *ngIf="transferForm.get('amount')?.errors?.['insufficientBalance']">
+          Le montant dépasse le solde disponible.
+        </p-message>
+      </div>
+
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-info-circle"></i>
+        </p-inputgroup-addon>
+        <p-floatlabel variant="on">
+          <input
+            pInputText
+            id="purpose"
+            type="text"
+            formControlName="purpose"/>
+          <label for="purpose">But de transfer</label>
+        </p-floatlabel>
+      </p-inputgroup>
+
+      <div class="flex flex-wrap gap-4 justify-center">
+        <p-button
+          type="submit"
+          [raised]="true"
+          [disabled]="transferForm.invalid">
+          <ng-container *ngIf="!checkAccNbr">Vérifiér</ng-container>
+          <i class="pi pi-spin pi-spinner text-white" *ngIf="checkAccNbr"></i>
+        </p-button>
+      </div>
+    </div>
+  </form>
+}
+
+@if (activeIndex === 1) {
+
+  <form [formGroup]="pinForm" (ngSubmit)="confirm()">
+    <div class="card grid grid-cols-1 md:grid-cols-1 gap-4">
+      <div class="font-semibold text-xl">Resumé</div>
+
+      <span class="text-primary font-medium">Compte débit : {{ user()?.civilStatus }}
+        {{ user()?.firstName }} {{ user()?.lastName }} / ({{ selectedAccount()?.accountNumber }}) </span>
+
+      <span class="text-blue-600 font-medium">Compte destinataire : {{ userToTransfer()?.civilStatus }}
+        {{ userToTransfer()?.firstName }} {{ userToTransfer()?.lastName }}
+        / ({{ transferForm.get('toAccountNumber')?.value }}) </span>
+
+      <span class="text-blue-600 font-medium">Montant : {{ transferForm.get('amount')?.value }} FCFA</span>
+
+      @if (isPinCheck && !successTransfer) {
+        <label>votre code Pin</label>
+        <p-inputotp formControlName="pinCode" [mask]="true" [integerOnly]="true" (onFocus)="onFocus($event)"/>
+      }
+
+      <div class="flex flex-col gap-4 mb-4">
+        <p-message severity="success" icon="pi pi-check-circle" *ngIf="successTransfer">
+          Transfert effectué avec succès
+        </p-message>
+        <p-message severity="error" icon="pi pi-times-circle" *ngIf="errorTransfer()">{{ errorTransfer() }}</p-message>
+      </div>
+
+      <div class="flex flex-wrap gap-4 justify-center">
+        <p-button
+          type="button"
+          label="Retour"
+          [raised]="true"
+          variant="outlined"
+          (click)="previous()"/>
+
+        <p-button
+          type="submit"
+          label="Valider le transfert"
+          [raised]="true"
+          *ngIf="isPinCheck && !successTransfer"
+          [disabled]="pinForm.invalid"/>
+        <p-button
+          type="submit"
+          label="Valider le transfert"
+          [raised]="true"
+          *ngIf="!isPinCheck && !successTransfer"/>
+
+      </div>
+    </div>
+  </form>
+}

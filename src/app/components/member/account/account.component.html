@@ -1,0 +1,37 @@
+<div class="card grid grid-cols-1 md:grid-cols-1 gap-4">
+  <div class="flex flex-wrap gap-4">
+    <p-button (onClick)="goToTransaction('transfer')" label="Transfert" severity="info" raised/>
+    <p-button (onClick)="goToTransaction('deposit')" label="Depôt" severity="success" raised/>
+    <p-button (onClick)="goToTransaction('withdrawal')" label="Retrait" severity="danger" raised/>
+  </div>
+
+  <p-inputgroup>
+    <p-inputgroup-addon>
+      <div
+        class="flex items-center justify-center bg-primary dark:bg-primary rounded-border"
+        style="width: 2rem; height: 2rem">
+        @if(selectedAccount()?.accountType === 1){
+          <i class="pi pi-wallet text-white !text-xl"></i>
+        }@else{
+        <i class="pi pi-building-columns text-white !text-xl"></i>
+        }
+      </div>
+    </p-inputgroup-addon>
+    <p-floatlabel class="w-full md:w-56" variant="on">
+      <p-select
+        [options]="accounts()"
+        [(ngModel)]="selectedAccount"
+        optionLabel="accountNumber"
+        placeholder="Select an Account"
+        class="w-full md:w-56"
+        (onChange)="onChange($event)"/>
+      <label *ngIf="selectedAccount()?.accountType === 1"><span class="text-primary font-medium">Compte Poche / {{ balance }} FCFA </span></label>
+      <label *ngIf="selectedAccount()?.accountType === 2"><span class="text-primary font-medium">Compte Épargne / {{ balance }} FCFA </span></label>
+    </p-floatlabel>
+  </p-inputgroup>
+</div>
+
+<div class="col-span-12 xl:col-span-12" *ngIf="selectedAccount()">
+  <app-operation [account]="selectedAccount()!" />
+</div>
+

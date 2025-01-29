@@ -1,94 +1,93 @@
-import { Injectable, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BrowserStorageService } from './browser-storage.service';
+import {inject, Injectable, signal} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { BehaviorSubject, catchError, map, Observable, of, tap } from 'rxjs';
-import { ApiResponse, ApiResponses } from '../interfaces/api-response';
+import {catchError, Observable, of, Subject, tap} from 'rxjs';
+import { ApiResponse } from '../interfaces/api-response';
 import { Account } from '../models/account.model';
+import { Cacheable } from 'ts-cacheable'
+import {TransferRequest} from "../interfaces/transfer-request";
+import {UserPinRequest} from "../interfaces/userPin-request";
+import {ErrorHandler} from "../errorHandler/error.handler"
+import {OperationRequest} from "../interfaces/operation-request";
+
+const cacheBuster$ = new Subject<void>()
+cacheBuster$.next()
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AccountService {
-  private apiUrl : string =  environment.apiUrl;
+  private apiUrl: string = environment.apiUrl;
   private selectedAccount: Account | null = null;
-  private currentAccount = signal<Account | null>(null);
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient, private storageService: BrowserStorageService) {}
 
-   // Other CRUD methods...
-   getAccounts() : Observable<ApiResponses<Account>> {
-    return this.http.get<ApiResponses<Account>>(`${this.apiUrl}/accounts`).pipe(
-      tap(_ => console.log("fetched accounts")),
-      catchError(this.handleError<ApiResponses<Account>>("getAccounts"))
-    );
+  @Cacheable({cacheBusterObserver: cacheBuster$})
+  // Other CRUD methods...
+  getAccounts(): Observable<ApiResponse<Account[] | null>> {
+    const url = `${this.apiUrl}/accounts/GetUserAccounts`;
+    return this.http.get<ApiResponse<Account[]>>(url)
+      .pipe(
+        // tap((_) => console.log('fetched accounts')),
+        catchError((error: HttpErrorResponse) => ErrorHandler.handleError<Account[]>(error))
+      );
   }
 
+  @Cacheable({cacheBusterObserver: cacheBuster$})
   /** GET account by id. Will 404 if id not found */
-  getAccount(id: string): Observable<ApiResponses<Account>> {
-    const url = `${this.apiUrl}/accounts/GetByUserId/${id}`;
-    return this.http.get<ApiResponses<Account>>(url).pipe(
+  getUserAccountWithOperations(): Observable<ApiResponse<Account[] | null>> {
+    const url = `${this.apiUrl}/accounts/GetUserAccountsWithOperations`;
+    return this.http.get<ApiResponse<Account[]>>(url)
+      .pipe(
       // tap(_ => console.log(`fetched account id=${id}`)),
-      catchError(this.handleError<ApiResponses<Account>>(`getAccount id=${id}`))
+      catchError((error: HttpErrorResponse) => ErrorHandler.handleError<Account[]>(error))
     );
   }
 
-  deposit(accountId: string, amount: number) {
-    return this.http.post(`${this.apiUrl}/accounts/${accountId}/deposit`, { amount });
+  @Cacheable()
+  getByAccountNumber(accountNbr: string): Observable<ApiResponse<Account>> {
+    return this.http.get<ApiResponse<Account>>(`${this.apiUrl}/Accounts/GetByAccountNumber/${accountNbr}`);
   }
 
-  withdraw(accountId: string, amount: number) {
-    return this.http.post(`${this.apiUrl}/accounts/${accountId}/withdraw`, { amount });
+  deposit(depositRequest: OperationRequest) {
+    return this.http.post<ApiResponse<boolean>>(`${this.apiUrl}/operations/deposit`,
+      depositRequest)
+      .pipe(tap(() => cacheBuster$.next()),
+        catchError((error: HttpErrorResponse) => ErrorHandler.handleError<boolean>(error)));
   }
 
-  transfer(fromAccountId: string, toAccountId: string, amount: number) {
-    return this.http.post(`${this.apiUrl}/accounts/transfer`, { fromAccountId, toAccountId, amount });
+  withdrawal(withdrawalRequest: OperationRequest) {
+    return this.http.post<ApiResponse<boolean>>(`${this.apiUrl}/operations/withdrawal`,
+      withdrawalRequest)
+      .pipe(tap(() => cacheBuster$.next()),
+        catchError((error: HttpErrorResponse) => ErrorHandler.handleError<boolean>(error)));
   }
 
-  setSelectedAccount(account: Account) {
-    this.selectedAccount = account;
+  transfer(transferRequest: TransferRequest){
+    return this.http.post<ApiResponse<boolean>>(`${this.apiUrl}/operations/transfer`,
+      transferRequest)
+      .pipe(tap(() => cacheBuster$.next()),
+        catchError((error: HttpErrorResponse) => ErrorHandler.handleError<boolean>(error)))
+  }
+
+  checkUserPin(userPinRequest: UserPinRequest){
+    // console.log("result checkpin", userPinRequest);
+    return this.http.post<ApiResponse<boolean>>(`${this.apiUrl}/userPins/userPinCheck`,
+      userPinRequest)
+      .pipe(
+        // tap((result: ApiResponse<boolean>) => {
+        // if(result.isSuccess){
+        //   console.log("result checkpin", result);
+        // }else{
+        //   console.log("result checkpin else", result);
+        // }
+        // }
+      // ),
+        catchError((error: HttpErrorResponse) => ErrorHandler.handleError<boolean>(error))
+      );
   }
 
   getSelectedAccount(): Account | null {
     return this.selectedAccount;
   }
-
-  clearSelectedAccount() {
-    this.selectedAccount = null;
-  }
-
-  changeAccount(account: Account) {
-    // this.accountSource.next(account);
-    this.currentAccount.set(account);
-  }
-
-  currentAccountValue() {
-    return this.currentAccount;
-  }
-
- /**
-   * Handle Http operation that failed.
-   * Let the app continue.
-   *
-   * @param operation - name of the operation that failed
-   * @param result - optional value to return as the observable result
-   */
- private handleError<T>(operation = 'operation', result?: T) {
-  return (error: any): Observable<T> => {
-
-    // TODO: send the error to remote logging infrastructure
-    console.error(error); // log to console instead
-
-    // TODO: better job of transforming error for user consumption
-    this.log(`${operation} failed: ${error.message}`);
-
-    // Let the app keep running by returning an empty result.
-    return of(result as T);
-  };
-}
-
-log(arg0: string) {
-  throw new Error('Method not implemented.');
-}
-
 }

@@ -19,11 +19,11 @@ export class UserResolver implements Resolve<User | null> {
 
     const url = `${this.apiUrl}/users/me`;
 
-    // Si l'account est déjà présent dans le service, le renvoyer directement
-    const cachedUser = this.userService.getUser()();
-    if (cachedUser) {
-      return of(cachedUser); // Observable de l'account en cache
-    }
+    // // Si l'account est déjà présent dans le service, le renvoyer directement
+    // const cachedUser = this.userService.getUser();
+    // if (cachedUser) {
+    //   return of(cachedUser); // Observable de l'account en cache
+    // }
 
     // Sinon, faire un appel API pour récupérer le compte et ses opérations
     return this.http.get<User>(url);

@@ -1,0 +1,107 @@
+@if (activeIndex === 0) {
+  <form [formGroup]="depositForm" (ngSubmit)="goToSummary()">
+    <div class="card grid grid-cols-1 md:grid-cols-1 gap-4">
+      <div class="text-primary font-semibold text-xl">
+        <i class="pi pi-download" style="font-size: 1.5rem;">
+          {{ depositTitle }}
+        </i>
+      </div>
+      <span class="flex justify-center">
+      </span>
+      <p-inputgroup>
+        <p-inputgroup-addon>
+          <i class="pi pi-user"></i>
+        </p-inputgroup-addon>
+        <p-floatlabel variant="on">
+          <input
+            pInputText
+            id="accountNbr"
+            type="text"
+            formControlName="accountNumber"
+          />
+          <label for="accountNbr">Numéro de compte</label>
+        </p-floatlabel>
+      </p-inputgroup>
+
+      <span *ngIf="errorAccountNbr()" class="text-red-500 font-medium">
+        {{ errorAccountNbr() }}
+      </span>
+
+      <p-inputgroup>
+        <p-inputgroup-addon>XAF</p-inputgroup-addon>
+        <p-floatlabel variant="on">
+          <p-inputnumber
+            formControlName="amount"
+            inputId="amount"
+            mode="decimal"
+            [minFractionDigits]="2"
+            [maxFractionDigits]="5"
+            currency="XAF"
+            locale="en-US"/>
+          <label>Montant</label>
+        </p-floatlabel>
+      </p-inputgroup>
+<!--      <p-inputgroup>-->
+<!--        <p-inputgroup-addon>-->
+<!--          <i class="pi pi-info-circle"></i>-->
+<!--        </p-inputgroup-addon>-->
+<!--      </p-inputgroup>-->
+
+      <div class="flex flex-wrap gap-4 justify-center">
+        <p-button
+          type="submit"
+          [raised]="true"
+          [disabled]="depositForm.invalid">
+          <ng-container *ngIf="!checkAccNbr">Vérifiér</ng-container>
+          <i class="pi pi-spin pi-spinner text-white" *ngIf="checkAccNbr"></i>
+        </p-button>
+      </div>
+    </div>
+  </form>
+}
+
+@if (activeIndex === 1) {
+
+  <form [formGroup]="pinForm" (ngSubmit)="confirm()">
+    <div class="card grid grid-cols-1 md:grid-cols-1 gap-4">
+      <div class="font-semibold text-xl">Resumé</div>
+
+      <span class="text-primary font-medium">Point dépôt : {{ user()?.civilStatus }}
+        {{ user()?.firstName }} {{ user()?.lastName }}) </span>
+
+      <span class="text-blue-600 font-medium">Compte destinataire : {{ userToDeposit()?.civilStatus }}
+        {{ userToDeposit()?.firstName }} {{ userToDeposit()?.lastName }}
+        / ({{ depositForm.get('accountNumber')?.value }}) </span>
+
+      <span class="text-blue-600 font-medium">Montant : {{ depositForm.get('amount')?.value }} FCFA</span>
+
+      @if (!successDeposit) {
+        <label>votre code Pin</label>
+        <p-inputotp formControlName="pinCode" [mask]="true" [integerOnly]="true" (onFocus)="onFocus($event)"/>
+      }
+
+      <div class="flex flex-col gap-4 mb-4">
+        <p-message severity="success" icon="pi pi-check-circle" *ngIf="successDeposit">
+          Dépôt effectué avec succès
+        </p-message>
+        <p-message severity="error" icon="pi pi-times-circle" *ngIf="errorDeposit()">{{ errorDeposit() }}</p-message>
+      </div>
+
+      <div class="flex flex-wrap gap-4 justify-center">
+        <p-button
+          type="button"
+          label="Retour"
+          [raised]="true"
+          variant="outlined"
+          (click)="previous()"/>
+
+        <p-button
+          type="submit"
+          label="Valider le depôt"
+          [raised]="true"
+          *ngIf="!successDeposit"
+          [disabled]="pinForm.invalid"/>
+      </div>
+    </div>
+  </form>
+}

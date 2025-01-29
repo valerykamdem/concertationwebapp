@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, computed } from '@angular/core';
 import { LayoutService } from '../../../services/layout.service';
 import { MenuService } from '../../../services/menu.service';
 import { ButtonModule } from 'primeng/button';
@@ -18,4 +18,11 @@ export class ConfigComponent {
 
     public layoutService = inject(LayoutService);
     public menuService = inject(MenuService);
+
+  isDarkTheme = computed(() => this.layoutService.layoutConfig().darkTheme);
+
+  toggleDarkMode() {
+    // this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
+    this.layoutService.toggleDarkTheme();
+  }
 }

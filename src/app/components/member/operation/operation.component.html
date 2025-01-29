@@ -1,67 +1,128 @@
-<h3>Compte {{ lastOperation()?.accountNumber }}</h3>
-
-<!-- <div *ngIf="operations">
-  <div *ngFor="let operation of operations()">
-    <p>description: {{ operation.description }} </p>
-    <p>accountNumber: {{ operation.accountNumber }} </p>
-    <p>operationDate: {{ operation.operationDate }} </p>
-    <p>operationType: {{ operation.operationType }} </p>
-    <p>amount: {{ operation.amount }} €</p>
-    <p>BalanceAfterBooking: {{ operation.balanceAfterBooking }} €</p>
-    <p>Reference NumberBalance: {{ operation.referenceNumber }} </p>
-    <p>motif1: {{ operation.itendedUse }} </p>
-  </div>
-</div> 
-
-  <p-button type="button" (onClick)="goBack()">go back</p-button>-->
-
-  <div class="grid" *ngIf="operations">
-    <div class="col-12 lg:col-12 xl:col-12">
-        <div class="card mb-0">
-            <div class="flex justify-content-between mb-3">
-                <div>
-                    <p-button (onClick)="goToTransfert()">Transfert</p-button>
-                </div>
-                <div class="flex align-items-center justify-content-center bg-blue-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
-                    <i class="pi pi-user text-blue-500 text-xl"></i> 
-                </div>
-                
-            </div>
-            <span class="text-green-500 font-medium text-xl">Total {{ lastOperation()?.balanceAfterBooking }} FCFA</span>
-        </div>
-    </div>
-    <div class="col-12 xl:col-12">
-      <div class="card">
-          <!-- <h5>Compte {{operation.accountNumber}} / <span class="text-green-500 font-medium"> {{ balanceTotal }} FCFA</span></h5> -->
-          <p-table [value]="operations" styleClass="p-datatable-striped" [paginator]="true" [rows]="10" responsiveLayout="scroll">
-              <ng-template pTemplate="header">
-                  <tr>
-                      <th pSortableColumn="operationDate">Date <p-sortIcon field="operationDate"></p-sortIcon></th>
-                      <th>Motif</th>
-                      <th>Mouvements</th>
-                      <th>Etat</th>
-                  </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-operation>
-                  <tr>
-                      <td>{{ operation.operationDate | date:'dd-MM-yyyy'}} </td>
-                      <td>{{ operation.itendedUse }} </td>
-                      <td>
-                          <span class="text-green-500"  *ngIf="operation.operationType === 1">
-                              + {{ operation.amount }} FCFA
-                          </span>
-                          <span class="text-red-500"  *ngIf="(operation.operationType === 2 || operation.operationType === 3)">
-                              - {{ operation.amount }} FCFA
-                          </span>
-                          <span class="text-blue-500"  *ngIf="operation.operationType === 5">
-                               + 0 FCFA
-                          </span>
-                      </td>
-                      <td>{{ operation.balanceAfterBooking }} </td>
-                  </tr>
-              </ng-template>
-          </p-table>  
+<div class="col-span-12 xl:col-span-12" *ngIf="account">
+  <div class="card !mb-8">
+    <div class="flex flex-wrap gap-4 font-semibold text-xl mb-4" *ngIf="account().accountType === 1">
+      <div class="flex items-center justify-center bg-primary dark:bg-primary rounded-border"
+           style="width: 2.2rem; height: 2.2rem">
+        <i class="pi pi-wallet text-white !text-xl"></i>
       </div>
+      <span class="text-primary font-medium"> Compte Poche / {{ account().balance }}FCFA </span>
+    </div>
+    <div class="flex flex-wrap gap-4 font-semibold text-xl mb-4" *ngIf="account().accountType === 2">
+      <div class="flex items-center justify-center bg-primary dark:bg-primary rounded-border"
+           style="width: 2.2rem; height: 2.2rem">
+        <i class="pi pi-building-columns text-white !text-xl"></i>
+      </div>
+      <span class="text-primary font-medium "> Compte Épargne / {{ account().balance }} FCFA </span>
+    </div>
+    <p-table [value]="account()!.operations" stripedRows styleClass="p-datatable-striped"
+             (onRowSelect)="onRowSelect($event)"
+             selectionMode="single"
+             [(selection)]="selectedOperation"
+             dataKey="id"
+             responsiveLayout="scroll"
+             [resizableColumns]="true"
+             [paginator]="true" [rows]="10">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="operationDate">Date
+            <p-sortIcon field="operationDate"></p-sortIcon>
+          </th>
+          <th>Motif</th>
+          <th pSortableColumn="amount">Mouvements
+            <p-sortIcon field="amount"></p-sortIcon>
+          </th>
+          <!--          <th>Etat</th>-->
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-operation>
+        <tr [pSelectableRow]="operation">
+          <td>{{ operation.operationDate | date:'dd-MM-yyyy' }}</td>
+          <td>{{ operation.purpose }}</td>
+          <td>
+            <p-tag [value]="getAmountWithSign(operation)" [severity]="getSeverity(operation.operationType)"/>
+          </td>
+          <!--          <td>{{ operation.balanceAfterTransaction }}</td>-->
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
-  </div>
+</div>
+
+<!--<div class="card flex justify-center">-->
+<p-dialog [(visible)]="visible" [style]="{ width: '25rem' }">
+  <ng-template #header>
+    <div class="inline-flex items-center justify-center gap-2">
+      <span class="font-bold whitespace-nowrap text-xl">Details de la transaction</span>
+    </div>
+  </ng-template>
+  <ng-template #content>
+    <div class="flex flex-wrap justify-center mb-4 gap-4">
+      <div>
+          <span class="font-normal text-center text-xl">
+            <strong>{{ operation()?.purpose }}</strong>
+          </span>
+        <div class="font-semibold text-center">
+          <strong>
+            <p-tag [value]="getAmountWithSign(operation()!)" [severity]="getSeverity(operation()?.operationType!)"/>
+          </strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-between mb-4">
+      <span class="font-semibold text-xl">Details</span>
+    </div>
+
+    <div class="flex justify-between mb-4">
+      <p-table [value]="[operation]" [autoLayout]="true" stripedRows styleClass="p-datatable-striped">
+        <ng-template pTemplate="body">
+          <tr>
+            <td><strong>Date</strong></td>
+            <td>{{ operation()?.operationDate | date:'dd-MM-yyyy' }}</td>
+          </tr>
+          <tr>
+            <td><strong>Description</strong></td>
+            <td>{{ operation()?.description }}</td>
+          </tr>
+          <tr>
+            <td><strong>balance après Transaction</strong></td>
+            <td>{{ operation()?.balanceAfterTransaction }}</td>
+          </tr>
+          <tr>
+            <td><strong>Numéro de compte associé</strong></td>
+            <td>{{ operation()?.relatedAccountNumber }}</td>
+          </tr>
+          <tr>
+            <td><strong>Utilisateur associé</strong></td>
+            <td>{{ operation()?.relatedAccountUser }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <div class="flex justify-between mb-4">
+      <span class="font-semibold text-xl">Autres details</span>
+    </div>
+
+    <div class="flex justify-between mb-4">
+      <p-table [value]="[operation]" [autoLayout]="true" stripedRows styleClass="p-datatable-striped">
+        <ng-template pTemplate="body">
+          <tr>
+            <td><strong>Type</strong></td>
+            <td>{{ operation()?.operationType }}</td>
+          </tr>
+          <tr>
+            <td><strong>Numéro de reference</strong></td>
+            <td>{{ operation()?.referenceNumber }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+  </ng-template>
+  <ng-template #footer>
+    <p-button label="Close" [outlined]="true" severity="primary" (click)="visible = false"/>
+  </ng-template>
+</p-dialog>
+<!--</div>-->
 

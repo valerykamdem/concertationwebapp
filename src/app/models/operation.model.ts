@@ -10,9 +10,8 @@ export class Operation {
         public accountNumber : string,
         public relatedAccountNumber : string,
         public relatedAccountUser : string,
-        public itendedUse : string,
-        public balanceAfterBooking : number,
+        public purpose : string,
+        public balanceAfterTransaction : number,
         public status : string,
     ) {}
   }
-  

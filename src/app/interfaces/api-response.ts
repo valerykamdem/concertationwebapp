@@ -1,35 +1,17 @@
-export interface AuthResponse {
-    "value": {
-      accessToken: string,
-      refreshToken: string
-    }
-    "isSuccess": boolean,
-    "isFailure": boolean,
-    "error": {
-        code: string;
-        description: string;
-        type: number;
-      }
+// Définition de l'interface pour les tokens
+export interface TokenResponse {
+  accessToken: string;
+  refreshToken: string;
 }
 
-export interface ApiResponses<T> {
-    value: T[];
-    isSuccess: boolean;
-    isFailure: boolean;
-    error: {
-      code: string;
-      description: string;
-      type: number;
-    };
-  }
+export interface ApiResponse<T> {
+  value: T extends any[] ? T : T | null;
+  isSuccess: boolean;
+  isFailure: boolean;
+  error: {
+    code: string;
+    description: string;
+    type: number;
+  };
+}
 
-  export interface ApiResponse<T> {
-    value: T;
-    isSuccess: boolean;
-    isFailure: boolean;
-    error: {
-      code: string;
-      description: string;
-      type: number;
-    };
-  }

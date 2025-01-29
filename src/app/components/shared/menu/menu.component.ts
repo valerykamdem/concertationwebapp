@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { LayoutService } from '../../../services/layout.service';
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { MenuitemComponent } from '../menuitem/menuitem.component';
 import { AvatarModule } from 'primeng/avatar';
 import { PanelMenuModule } from 'primeng/panelmenu';
@@ -8,8 +8,7 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 @Component({
     selector: 'app-menu',
     imports: [
-        NgFor,
-        NgIf,
+        CommonModule,
         MenuitemComponent,
         AvatarModule,
         PanelMenuModule
@@ -34,9 +33,9 @@ export class MenuComponent implements OnInit {
           {
               label: 'Transaction',
               items: [
-                  { label: 'Transfert', icon: 'pi pi-fw pi-id-card', routerLink: ['/transfert'] },
-                  { label: 'Depôt', icon: 'pi pi-fw pi-check-square', routerLink: ['/depot'] },
-                  { label: 'Retrait', icon: 'pi pi-fw pi-bookmark', routerLink: ['/retrait'] }
+                  { label: 'Transfert', icon: 'pi pi-fw pi-dollar', routerLink: ['/transfer'] },
+                  { label: 'Depôt', icon: 'pi pi-download', routerLink: ['/deposit'] },
+                  { label: 'Retrait', icon: 'pi pi-upload', routerLink: ['/withdraw'] }
                 //   { label: 'Invalid State', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['/uikit/invalidstate'] },
                 //   { label: 'Button', icon: 'pi pi-fw pi-box', routerLink: ['/uikit/button'] },
                 //   { label: 'Table', icon: 'pi pi-fw pi-table', routerLink: ['/uikit/table'] },
@@ -55,8 +54,8 @@ export class MenuComponent implements OnInit {
           {
               label: 'Mes Comptes',
               items: [
-                  { label: 'Courant', icon: 'pi pi-fw pi-eye', routerLink: ['/courant'], badge: 'NEW' },
-                  { label: 'Epargne', icon: 'pi pi-fw pi-globe', routerLink: ['/epargne'], badge: 'NEW'},
+                  { label: 'Comptes', icon: 'pi pi-building-columns', routerLink: ['/accounts'], badge: 'NEW' },
+                  // { label: 'Épargne', icon: 'pi pi-fw pi-building-columns', routerLink: ['/account/epargne'], badge: 'NEW'},
               ]
           },
         //   {

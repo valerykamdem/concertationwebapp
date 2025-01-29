@@ -30,7 +30,7 @@ showProfileSidebar() {
 throw new Error('Method not implemented.');
 }
     _config: layoutConfig = {
-        preset: 'Aura',
+        preset: 'Lara',
         primary: 'emerald',
         surface: null,
         darkTheme: false,
@@ -45,7 +45,8 @@ throw new Error('Method not implemented.');
         menuHoverActive: false
     };
 
-    layoutConfig = signal<layoutConfig>(this._config);
+    // layoutConfig = signal<layoutConfig>(this._config);
+  layoutConfig = signal<layoutConfig>(this._config);
 
     layoutState = signal<LayoutState>(this._state);
 
@@ -81,7 +82,14 @@ throw new Error('Method not implemented.');
 
     private initialized = false;
 
+    // Custom Concertation
+  private readonly LAYOUT_CONFIG_KEY: string = 'layout-config';
+  // End Custom Concertation
+
     constructor() {
+      this.loadSavedConfig().then(config => {
+        this.layoutConfig.set(config);
+      });
         effect(() => {
             const config = this.layoutConfig();
             if (config) {
@@ -100,6 +108,69 @@ throw new Error('Method not implemented.');
             this.handleDarkModeTransition(config);
         });
     }
+
+    // Custom Concertation
+  // Charge la configuration sauvegardée
+  private loadSavedConfig(): Promise<layoutConfig> {
+    return new Promise((resolve) => {
+    try {
+      const savedConfig = localStorage.getItem(this.LAYOUT_CONFIG_KEY);
+      if (savedConfig) {
+        resolve({ ...this._config, ...JSON.parse(savedConfig) });
+      } else {
+        resolve(this._config);
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement de la configuration:', error);
+      resolve(this._config);
+    }
+    });
+  }
+
+  // Sauvegarde la configuration
+  private saveConfig(config: layoutConfig): void {
+    localStorage.setItem(this.LAYOUT_CONFIG_KEY, JSON.stringify(config));
+  }
+
+  toggleDarkTheme(): void {
+    this.layoutConfig.update(config => {
+      const updatedConfig = { ...config, darkTheme: !config.darkTheme };
+      this.saveConfig(updatedConfig);
+      return updatedConfig;
+    });
+  }
+
+  updateColorTheme(type: string, color: any): void {
+    this.layoutConfig.update(config => {
+      let updatedConfig = {};//{ ...config, darkTheme: !config.darkTheme };
+      if(type === 'primary'){
+        updatedConfig = { ...config, primary: color };
+      }else if(type === 'surface'){
+        updatedConfig = { ...config, surface: color };
+      }
+      this.saveConfig(updatedConfig);
+      return updatedConfig;
+    });
+  }
+
+  updatePreset(preset: any): void {
+    this.layoutConfig.update(config => {
+      const updatedConfig = { ...config, preset: preset };
+      this.saveConfig(updatedConfig);
+      return updatedConfig;
+    });
+  }
+
+  updateMenuMode(event: string): void {
+    this.layoutConfig.update(config => {
+      const updatedConfig = { ...config, menuMode: event };
+      this.saveConfig(updatedConfig);
+      return updatedConfig;
+    });
+  }
+
+  // End Custom Concertation
+
 
     private handleDarkModeTransition(config: layoutConfig): void {
         if ((document as any).startViewTransition) {

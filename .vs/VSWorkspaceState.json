@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\.angular\\cache\\19.1.5",
+    "\\.angular\\cache\\19.1.5\\concertationwebapp",
+    "\\.angular\\cache\\19.1.5\\concertationwebapp\\vite",
+    "\\.angular\\cache\\19.1.5\\concertationwebapp\\vite\\deps_ssr",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\components",
+    "\\src\\app\\components\\shared",
+    "\\src\\app\\components\\shared\\dashboard"
+  ],
+  "SelectedNode": "\\src\\app\\components\\shared\\dashboard\\dashboard.component.html",
+  "PreviewInSolutionExplorer": false
+}

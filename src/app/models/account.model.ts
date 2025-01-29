@@ -1,4 +1,5 @@
 import { Operation } from "./operation.model";
+import {User} from "./user.model";
 
 export interface Account {
     id: string,
@@ -6,6 +7,8 @@ export interface Account {
     balance: number,
     userId: string,
     accountNumber: string,
-    operations: Operation[]
+    operations: Operation[],
+    user: User,
 }
 
+export class Account implements Account {}

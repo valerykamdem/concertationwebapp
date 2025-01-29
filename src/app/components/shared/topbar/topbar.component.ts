@@ -27,7 +27,7 @@ import { ConfiguratorComponent } from "../configurator/configurator.component";
         BadgeModule,
         ConfirmDialog,
         ToastModule,
-        ConfiguratorComponent, 
+        ConfiguratorComponent,
         StyleClassModule],
     providers: [ConfirmationService, MessageService],
     templateUrl: './topbar.component.html'
@@ -35,18 +35,13 @@ import { ConfiguratorComponent } from "../configurator/configurator.component";
 })
 export class TopbarComponent implements OnInit {
 
-
-  // userService = inject(UserService);
+  userService = inject(UserService);
   layoutService = inject(LayoutService);
   authService = inject(AuthService);
-  confirmationService = inject(ConfirmationService); 
+  confirmationService = inject(ConfirmationService);
   messageService = inject(MessageService);
 
-  // user = undefined;// this.userService.getUser();
-
   items!: MenuItem[] | undefined;
-
-  constructor() { } 
 
   ngOnInit() {
         this.items = [
@@ -57,13 +52,13 @@ export class TopbarComponent implements OnInit {
               label: 'Profil',
               icon: 'pi pi-user',
               shortcut: '⌘+O',
-              routerLink: ['/profile'] 
+              routerLink: ['/profile']
           },
               {
                   label: 'Settings',
                   icon: 'pi pi-cog',
                   shortcut: '⌘+O',
-                  routerLink: ['/reglage'] 
+                  routerLink: ['/reglage']
               },
               {
                   label: 'Logout',
@@ -78,7 +73,7 @@ export class TopbarComponent implements OnInit {
       {
           separator: true
       }
-        ]; 
+        ];
     }
 
   logout() {
@@ -101,7 +96,8 @@ export class TopbarComponent implements OnInit {
   }
 
   toggleDarkMode() {
-    this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
+    // this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
+    this.layoutService.toggleDarkTheme();
   }
 
 }

@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import {ConfigComponent} from "../floatingconfigurator/floatingconfigurator.component";
+import {Button} from "primeng/button";
 
 @Component({
     selector: 'app-notfound',
-    imports: [RouterLink],
+  imports: [RouterLink, ConfigComponent, Button],
     templateUrl: './notfound.component.html',
     styleUrl: './notfound.component.css'
 })

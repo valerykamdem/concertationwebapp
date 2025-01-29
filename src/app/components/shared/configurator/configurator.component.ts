@@ -366,11 +366,12 @@ export class ConfiguratorComponent {
   }
 
   updateColors(event: any, type: string, color: any) {
-      if (type === 'primary') {
-          this.layoutService.layoutConfig.update((state: any) => ({ ...state, primary: color.name }));
-      } else if (type === 'surface') {
-          this.layoutService.layoutConfig.update((state: any) => ({ ...state, surface: color.name }));
-      }
+    this.layoutService.updateColorTheme(type, color.name);
+      // if (type === 'primary') {
+      //     this.layoutService.layoutConfig.update((state: any) => ({ ...state, primary: color.name }));
+      // } else if (type === 'surface') {
+      //     this.layoutService.layoutConfig.update((state: any) => ({ ...state, surface: color.name }));
+      // }
       this.applyTheme(type, color);
 
       event.stopPropagation();
@@ -385,14 +386,16 @@ export class ConfiguratorComponent {
   }
 
   onPresetChange(event: any) {
-      this.layoutService.layoutConfig.update((state: any) => ({ ...state, preset: event }));
+      // this.layoutService.layoutConfig.update((state: any) => ({ ...state, preset: event }));
+    this.layoutService.updatePreset(event);
       const preset = presets[event as KeyOfType<typeof presets>];
       const surfacePalette = this.surfaces.find((s) => s.name === this.selectedSurfaceColor())?.palette;
       $t().preset(preset).preset(this.getPresetExt()).surfacePalette(surfacePalette).use({ useDefaultOptions: true });
   }
 
   onMenuModeChange(event: string) {
-      this.layoutService.layoutConfig.update((prev: any) => ({ ...prev, menuMode: event }));
+      // this.layoutService.layoutConfig.update((prev: any) => ({ ...prev, menuMode: event }));
+    this.layoutService.updateMenuMode(event);
   }
 
 }

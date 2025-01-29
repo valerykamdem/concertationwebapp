@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccountService } from '../../../services/account.service';
 import { UserService } from '../../../services/user.service';
@@ -6,81 +6,102 @@ import { OperationService } from '../../../services/operation.service';
 import { Account } from '../../../models/account.model';
 import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
-import { Router, RouterLink, RouterOutlet, ActivatedRoute } from '@angular/router';
-import { ApiResponse, ApiResponses } from '../../../interfaces/api-response';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ApiResponse } from '../../../interfaces/api-response';
 import { PaginatorModule } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
+import { User } from '../../../models/user.model';
+import { ButtonModule } from 'primeng/button';
+import { Operation } from '../../../models/operation.model';
+import {OperationComponent} from "../../member/operation/operation.component";
 
 @Component({
     selector: 'app-dashboard',
-    imports: [
-        CommonModule,
-        CardModule,
-        AvatarModule,
-        PaginatorModule,
-        TableModule
-    ],
+  imports: [
+    AvatarModule,
+    ButtonModule,
+    CardModule,
+    CommonModule,
+    PaginatorModule,
+    TableModule,
+    OperationComponent,
+  ],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
 
   userService = inject(UserService);
   accountService = inject(AccountService);
   operationService = inject(OperationService);
-  user = null;
-  // user = this.userService.getUser(); //signal<User | null | undefined>(undefined);
+  user = signal<User | null | undefined>(undefined);
   accounts = signal<Account[] | null | undefined>(undefined);
   balanceTotal = 0;
+  operations: Operation[] = [];
+  selectedAccount: Account | undefined;
+  isActive = false; // État initial
 
   constructor(
     private route: ActivatedRoute,
     private router: Router) { }
 
-  ngOnInit() {
-    // this.getAccount(); 
+  async ngOnInit() {
+    this.getUser();
+    this.getAccounts();
   }
 
-  // loadAccounts(): void {
-  //    this.accountService.getAccounts().subscribe((response: ApiResponses<Account>) => {
-  //     if(response.isSuccess){
-  //       this.accounts.set(response.value);
-  //       console.log(this.accounts());
-  //     }     
-  //   }); 
-  // }
+  getUser(): void {
+    this.userService.getUser()
+    .subscribe((response: ApiResponse<User | null | undefined>) => {
+      if(response.isSuccess){
+        this.user.set(response.value);
+      }
+    });
+  }
 
-  // getAccount(): void {
-  //   this.accountService.getAccount(this.user()?.id!)
-  //     .subscribe((response: ApiResponses<Account>) => {
-  //       if(response.isSuccess){
-  //         this.accounts.set(response.value);
-  //         this.balanceTotal = response.value.reduce((accumulateur, account) => accumulateur + account.balance, 0);
-  //       }
-  //     });
-  // }
+  getAccounts(): void {
+    this.accountService.getUserAccountWithOperations()
+      .subscribe((response: ApiResponse<Account[] | null>) => {
+        if(response.isSuccess){
+          this.accounts.set(response.value);
+          this.balanceTotal = response.value!.reduce((accumulateur, account) => accumulateur + account.balance, 0);
+        }
+      });
+  }
 
-  // goToOperation(account: Account) {
-  //   this.router.navigate(['/operations/', account.id]);
-  // }
+  navigateToAccount() {
+    this.router.navigate(['/accounts']);
+  }
 
-  // getSeverity(status: string) {
-  //   switch (status) {
-  //       case 'unqualified':
-  //           return 'danger';
+  onSelect(account: Account): void {
+    if(this.selectedAccount?.accountType === account.accountType){
+      this.isActive = !this.isActive;
+        this.selectedAccount = undefined;
+        // console.log("select equals", this.isActive);
+    }else{
+      this.isActive = !this.isActive;
+      this.selectedAccount = account;
+      this.operations = account.operations;
+      // console.log("onSelect", this.isActive);
+  }
 
-  //       case 'qualified':
-  //           return 'success';
+}
 
-  //       case 'new':
-  //           return 'info';
-
-  //       case 'negotiation':
-  //           return 'warning';
-
-  //       case 'renewal':
-  //           return null;
-  //   }
-  // }
+  goToTransaction(operation: string): void {
+    switch (operation) {
+      case 'transfer':
+        this.router.navigate(['/transfer']);
+        break;
+      case 'deposit':
+        this.router.navigate(['/deposit']);
+        break;
+      case 'withdrawal':
+        this.router.navigate(['/withdrawal']);
+        break;
+      default:
+        console.log('Default action');
+        break;
+    }
+  }
 
 }
