@@ -15,19 +15,16 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.apiUrl}/users/me`);
+  async getUser(): Promise<User | null | undefined> {
+    const response = await this.http.get<ApiResponse<User>>(`${this.apiUrl}/users/me`).toPromise();
+    this.user.set(response?.value);
+    return response?.value;
   }
 
-  // async initializeUser(): Promise<User | null | undefined> {
-  //   const response = await this.http.get<ApiResponse<User>>(`${this.apiUrl}/users/me`).toPromise();
-  //   this.user.set(response?.value);
-  //   return response?.value;
+  // getUser() {
+  //   console.log("getUser", this.user());
+  //   return this.user();
   // }
-
-  getUser() {
-    return this.user;
-  }
 
   setUserNull(): void {
     this.user.set(null);

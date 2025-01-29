@@ -18,20 +18,29 @@ export class AccountService {
 
    // Other CRUD methods...
    getAccounts() : Observable<ApiResponses<Account>> {
-    return this.http.get<ApiResponses<Account>>(`${this.apiUrl}/accounts`).pipe(
+    return this.http.get<ApiResponses<Account>>(`${this.apiUrl}/accounts/GetUserAccounts`).pipe(
       tap(_ => console.log("fetched accounts")),
       catchError(this.handleError<ApiResponses<Account>>("getAccounts"))
     );
   }
 
   /** GET account by id. Will 404 if id not found */
-  getAccount(id: string): Observable<ApiResponses<Account>> {
-    const url = `${this.apiUrl}/accounts/GetByUserId/${id}`;
+  getUserAccountWithOperations(): Observable<ApiResponses<Account>> {
+    const url = `${this.apiUrl}/accounts/GetUserAccountsWithOperations`;
     return this.http.get<ApiResponses<Account>>(url).pipe(
       // tap(_ => console.log(`fetched account id=${id}`)),
-      catchError(this.handleError<ApiResponses<Account>>(`getAccount id=${id}`))
+      catchError(this.handleError<ApiResponses<Account>>(`getUserAccountsWithOperations`))
     );
   }
+
+  // /** GET account by id. Will 404 if id not found */
+  // getAccount(id: string): Observable<ApiResponses<Account>> {
+  //   const url = `${this.apiUrl}/accounts/GetByUserId/${id}`;
+  //   return this.http.get<ApiResponses<Account>>(url).pipe(
+  //     // tap(_ => console.log(`fetched account id=${id}`)),
+  //     catchError(this.handleError<ApiResponses<Account>>(`getAccount id=${id}`))
+  //   );
+  // }
 
   deposit(accountId: string, amount: number) {
     return this.http.post(`${this.apiUrl}/accounts/${accountId}/deposit`, { amount });

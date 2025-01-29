@@ -1,5 +1,5 @@
 import { AuthResponse } from './../interfaces/api-response';
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BrowserStorageService } from './browser-storage.service';
@@ -17,19 +17,21 @@ export class AuthService {
   private currentToken = signal<string | null>(null);
   private currentRefreshToken = signal<string | null>(null);
 
-  constructor(private http: HttpClient, 
-    private router: Router,
-    private storageService: BrowserStorageService) { 
+  private http = inject(HttpClient); 
+  private router = inject(Router);
+  private storageService = inject(BrowserStorageService);
+
+  constructor() { 
       this.currentToken.set(this.storageService.getItem('authToken') || '');
       this.currentRefreshToken.set(this.storageService.getItem('refreshToken') || '');
     }
 
-  currentTokenValue() {
-      return this.currentToken;
-    }
+    currentTokenValue() {
+        return this.currentToken();
+      }
 
   currentRefreshTokenValue() {
-      return this.currentRefreshToken;
+      return this.currentRefreshToken();
     }
 
   login(credentials: LoginRequest) : Observable<AuthResponse | null | undefined> {
@@ -47,16 +49,21 @@ export class AuthService {
     }));
   }
 
+  navigateByUrl(url: string): void {
+this.router.navigateByUrl(url, {replaceUrl: true });
+  }
+
   logout() {
     this.storageService.clear();
     this.authResponse.set(null);
     this.currentToken.set(null);
     this.currentRefreshToken.set(null);
-    this.router.navigate(['/login']);
+    // this.router.navigate(['/login']);
+    this.navigateByUrl("/login");
   }
 
-  isLoggedIn(): boolean {
-    return !!this.storageService.getItem('authToken');
+  isAuthenticated() {
+    return this.currentTokenValue();
   }
 
   refreshToken(): Observable<AuthResponse> {

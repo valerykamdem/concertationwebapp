@@ -17,7 +17,7 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     if (this.authService.currentTokenValue()) {
-      request = this.AddTokenHeader(request, this.authService.currentTokenValue()()!);
+      request = this.AddTokenHeader(request, this.authService.currentTokenValue()!);
     }
 
     return next.handle(request).pipe(
@@ -52,7 +52,7 @@ private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
         }),
         catchError((err) => {
           this.isRefreshing = false;
-          // this.authService.logout();
+          this.authService.logout();
           return throwError(err);
         })
       );
@@ -66,4 +66,12 @@ private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
       );
     }
   }
+  // import jwtDecode from 'jwt-decode';
+
+  // isTokenExpired(token: string): boolean {
+  //   const decoded: any = jwtDecode(token);
+  //   const expirationDate = new Date(decoded.exp * 1000); // Convertir en millisecondes
+  //   return expirationDate < new Date(); // Retourne true si le token est expiré
+  // }
+
 }

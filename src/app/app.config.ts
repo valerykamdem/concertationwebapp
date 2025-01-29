@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(
       withHttpTransferCacheOptions({ includePostRequests: true })),
     // provideHttpClient(withInterceptors([AuthInterceptor]), withFetch()),
-    // provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptorsFromDi()),
     provideHttpClient(withFetch()),
     { 
       provide: HTTP_INTERCEPTORS, 
@@ -27,7 +27,6 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } })
   ]
 };
-
 
 // import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 // import { routes } from './app.routes';

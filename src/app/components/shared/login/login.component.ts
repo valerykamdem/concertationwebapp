@@ -15,7 +15,7 @@ import { PasswordModule } from 'primeng/password';
     host: { ngSkipHydration: 'true' },
     imports: [
         ReactiveFormsModule,
-        RouterLink,
+        // RouterLink,
         InputTextModule,
         CheckboxModule,
         ButtonModule,
@@ -24,7 +24,7 @@ import { PasswordModule } from 'primeng/password';
     templateUrl: './login.component.html',
     styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnDestroy {
+export class LoginComponent implements OnDestroy, OnInit {
 
   private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
@@ -32,10 +32,10 @@ export class LoginComponent implements OnDestroy {
   private loginSubscription: Subscription | null = null;
   valCheck: string[] = ['remember'];
 
-  constructor() { 
-    if (this.authService.isLoggedIn()) {
-      // this.router.navigate(['/']);
-    }
+  ngOnInit() { 
+    // if (this.authService.isAuthenticated()) {
+    //   this.authService.navigateByUrl('/');
+    // }
   }
 
       loginFormGroup = this.formBuilder.group({
@@ -43,7 +43,6 @@ export class LoginComponent implements OnDestroy {
         password: ['', Validators.required],
         checked: ['']
       });
-
 
   login() {
     if (this.loginFormGroup.valid) {
@@ -54,7 +53,8 @@ export class LoginComponent implements OnDestroy {
 
     this.loginSubscription = this.authService.login(loginRequest).subscribe({
       next: (result: AuthResponse | null | undefined) => {
-        this.router.navigate(['/']); 
+        // this.router.navigate(['/']);
+        this.authService.navigateByUrl("/"); 
       },
       error: error => {
         console.error('Login failed', error);

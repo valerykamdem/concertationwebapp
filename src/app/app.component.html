@@ -1,0 +1,8 @@
+    <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
+        <div class="flex flex-col items-center justify-center">
+            <div *ngIf="isLoading" class="card flex justify-center">
+                <p-progress-spinner ariaLabel="loading" />
+            </div>
+            <router-outlet *ngIf="!isLoading"></router-outlet>`
+        </div>
+    </div>
