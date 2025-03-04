@@ -1,5 +1,5 @@
 import {Component, inject, OnDestroy, OnInit, signal} from '@angular/core';
-import {AuthService} from '../../../services/auth.service';
+import {AuthService} from '../../../../services/auth.service';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -8,8 +8,8 @@ import {
 } from '@angular/forms';
 import {CheckboxModule} from 'primeng/checkbox';
 import {InputTextModule} from 'primeng/inputtext';
-import {ApiResponse, TokenResponse} from '../../../interfaces/api-response';
-import {LoginRequest} from '../../../interfaces/login-request';
+import {ApiResponse, TokenResponse} from '../../../../interfaces/api-response';
+import {LoginRequest} from '../../../../interfaces/login-request';
 import {ButtonModule} from 'primeng/button';
 import {Subscription} from 'rxjs';
 import {PasswordModule} from 'primeng/password';
@@ -44,7 +44,7 @@ export class LoginComponent implements OnDestroy, OnInit {
     if (this.authService.isAuthenticated()) {
       this.authService.navigateByUrl('/');
     } else {
-      this.authService.navigateByUrl('/login');
+      this.authService.navigateByUrl('/auth/login');
     }
 
     console.log("dans login");

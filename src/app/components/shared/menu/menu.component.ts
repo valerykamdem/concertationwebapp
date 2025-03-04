@@ -54,7 +54,7 @@ export class MenuComponent implements OnInit {
           {
               label: 'Mes Comptes',
               items: [
-                  { label: 'Comptes', icon: 'pi pi-building-columns', routerLink: ['/accounts'], badge: 'NEW' },
+                  { label: 'Comptes', icon: 'pi pi-building-columns', routerLink: ['/account'], badge: 'NEW' },
                   // { label: 'Épargne', icon: 'pi pi-fw pi-building-columns', routerLink: ['/account/epargne'], badge: 'NEW'},
               ]
           },

@@ -57,7 +57,7 @@ export class AccountService {
   }
 
   withdrawal(withdrawalRequest: OperationRequest) {
-    return this.http.post<ApiResponse<boolean>>(`${this.apiUrl}/operations/withdrawal`,
+    return this.http.post<ApiResponse<boolean>>(`${this.apiUrl}/operations/withdraw`,
       withdrawalRequest)
       .pipe(tap(() => cacheBuster$.next()),
         catchError((error: HttpErrorResponse) => ErrorHandler.handleError<boolean>(error)));

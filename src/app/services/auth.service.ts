@@ -1,12 +1,14 @@
-import {ApiResponse, TokenResponse} from '../interfaces/api-response';
-import { Injectable, inject} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import { ApiResponse, TokenResponse } from '../interfaces/api-response';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { LoginRequest } from '../interfaces/login-request';
-import {catchError, Observable, tap} from 'rxjs';
+import { catchError, Observable, tap } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
-import {ErrorHandler} from "../errorHandler/error.handler";
+import { ErrorHandler } from "../errorHandler/error.handler";
+import { UserService} from "./user.service";
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 
 @Injectable({
@@ -18,6 +20,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   private cookieService = inject(CookieService);
+  private userService = inject(UserService);
 
   login(credentials: LoginRequest): Observable<ApiResponse<TokenResponse | null>> {
     this.logout();
@@ -41,11 +44,15 @@ export class AuthService {
       .pipe(tap(response => {
           if (response.isSuccess) {
             this.storeTokens(response.value!);
+            this.userService.getUser().subscribe(); //get the user and save it in the user service
           } else {
             this.logout();
           }
         }),
-        catchError((error: HttpErrorResponse) => ErrorHandler.handleError<TokenResponse>(error))
+        catchError((error: HttpErrorResponse) => {
+          this.logout(); //logout if there is an error
+          return ErrorHandler.handleError<TokenResponse>(error);
+        })
       );
   }
 
@@ -82,6 +89,23 @@ export class AuthService {
     const token = this.cookieService.get('access_token');
     return !!token;
   }
+  /**
+   * ✅ Vérifie si l'utilisateur authentifié a un token valide
+   */
+  isValidToken(): boolean {
+    // you can use JWT here to check the validity of the token
+    const token = this.cookieService.get('access_token');
+    // return !!token;
+// console.log(token);
+    if(token){
+      // const decodedToken = jwtDecode(token) as JwtPayload;
+            const decodedToken = jwtDecode<JwtPayload>(token);
+            console.log(decodedToken);
+            const currentTime = Date.now() / 1000; // Convert to seconds
+            return decodedToken.exp! > currentTime;
+        }
+        return false;
+}
 
   /**
    * 🚪 Déconnexion et suppression des tokens
@@ -89,7 +113,7 @@ export class AuthService {
   logout(): void {
     this.cookieService.delete('access_token', '/');
     this.cookieService.delete('refresh_token', '/');
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   navigateByUrl(url: string): void {

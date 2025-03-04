@@ -13,7 +13,7 @@ import { TableModule } from 'primeng/table';
 import { User } from '../../../models/user.model';
 import { ButtonModule } from 'primeng/button';
 import { Operation } from '../../../models/operation.model';
-import {OperationComponent} from "../../member/operation/operation.component";
+import {OperationComponent} from "../operation/operation.component";
 
 @Component({
     selector: 'app-dashboard',
