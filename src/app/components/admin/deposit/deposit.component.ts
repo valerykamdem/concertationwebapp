@@ -140,7 +140,7 @@ export class DepositComponent implements OnInit {
     }
   }
 
-  onFocus(event: Event){
+  onFocus(){
     this.errorDeposit.set(null);
   }
 

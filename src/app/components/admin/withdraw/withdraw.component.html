@@ -71,7 +71,7 @@
 
       @if (!successWithdraw) {
         <label>votre code Pin</label>
-        <p-inputotp formControlName="pinCode" [mask]="true" [integerOnly]="true" (onFocus)="onFocus($event)"/>
+        <p-inputotp formControlName="pinCode" [mask]="true" [integerOnly]="true" (onFocus)="onFocus()"/>
       }
 
       <div class="flex flex-col gap-4 mb-4">

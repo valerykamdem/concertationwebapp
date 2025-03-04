@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import {ConfigComponent} from "../floatingconfigurator/floatingconfigurator.component";
 import {Button} from "primeng/button";
 

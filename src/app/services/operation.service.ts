@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import { Observable, BehaviorSubject, of, catchError } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { Operation } from '../models/operation.model';
 import { Account } from '../models/account.model';
 import { environment } from '../../environments/environment';
@@ -13,7 +13,7 @@ import {ErrorHandler} from "../errorHandler/error.handler";
 })
 export class OperationService {
   private apiUrl = environment.apiUrl;
-  private accountSource = new BehaviorSubject<Account | null>(null);
+  // private accountSource = new BehaviorSubject<Account | null>(null);
   private currentAccount = signal<Account | null>(null);
   private http = inject(HttpClient);
 

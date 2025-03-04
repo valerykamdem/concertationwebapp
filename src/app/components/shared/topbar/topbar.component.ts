@@ -1,7 +1,7 @@
-import { Component, ElementRef, ViewChild, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { LayoutService } from '../../../services/layout.service';
 import { MenuItem,ConfirmationService, MessageService } from 'primeng/api';
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialog } from 'primeng/confirmdialog';

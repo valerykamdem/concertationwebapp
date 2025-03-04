@@ -135,7 +135,7 @@ export class withdrawComponent implements OnInit {
     }
   }
 
-  onFocus(event: Event){
+  onFocus(){
     this.errorWithdraw.set(null);
   }
 

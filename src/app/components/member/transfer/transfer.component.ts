@@ -215,7 +215,7 @@ export class TransferComponent implements OnInit {
     }
   }
 
-  onFocus(event: Event){
+  onFocus(){
     this.errorTransfer.set(null);
   }
 

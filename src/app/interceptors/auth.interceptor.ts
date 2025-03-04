@@ -20,7 +20,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    let authReq = request;
+    // let authReq = request;
     const token = this.authService.getAccessToken(); // Récupérer le token
 
     if (token) {

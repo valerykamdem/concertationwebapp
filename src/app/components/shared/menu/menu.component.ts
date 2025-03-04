@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LayoutService } from '../../../services/layout.service';
 import { CommonModule } from '@angular/common';
 import { MenuitemComponent } from '../menuitem/menuitem.component';

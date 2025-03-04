@@ -1,9 +1,5 @@
 import {Routes} from '@angular/router';
 import {AuthGuard} from './guards/auth.guard';
-import {LayoutComponent} from './components/shared/layout/layout.component';
-import {LoginComponent} from "./components/shared/login/login.component";
-import {DashboardComponent} from "./components/shared/dashboard/dashboard.component";
-
 
 export const routes: Routes = [
   // {

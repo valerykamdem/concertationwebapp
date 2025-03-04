@@ -6,7 +6,7 @@ import { TableModule } from 'primeng/table';
 import { Account } from '../../../models/account.model';
 import { Operation } from '../../../models/operation.model';
 import { AccountService } from '../../../services/account.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ApiResponse } from '../../../interfaces/api-response';
 import { FormsModule } from '@angular/forms';
 import { Select } from 'primeng/select';
@@ -14,7 +14,6 @@ import { ButtonModule } from 'primeng/button';
 import {FloatLabel} from "primeng/floatlabel";
 import {InputGroup} from "primeng/inputgroup";
 import {InputGroupAddon} from "primeng/inputgroupaddon";
-import {Dialog} from "primeng/dialog";
 import {OperationComponent} from "../operation/operation.component";
 
 @Component({

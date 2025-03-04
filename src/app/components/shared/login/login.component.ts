@@ -15,7 +15,6 @@ import {Subscription} from 'rxjs';
 import {PasswordModule} from 'primeng/password';
 import {Message} from "primeng/message";
 import {NgIf} from "@angular/common";
-import {ConfigComponent} from "../floatingconfigurator/floatingconfigurator.component";
 
 @Component({
   selector: 'app-login',

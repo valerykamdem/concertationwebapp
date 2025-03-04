@@ -1,4 +1,4 @@
-import {Component, inject, input, Input, InputSignal, signal} from '@angular/core';
+import {Component, input, InputSignal, signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Operation } from '../../../models/operation.model';
